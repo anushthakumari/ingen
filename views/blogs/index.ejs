@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <link rel="icon" href="/favicon.ico" />
+
+  <!-- apple touch icon -->
+  <link rel="apple-touch-icon" sizes="180x180" href="/logo192.png">
+
+  <!-- SEO -->
+  <link rel="canonical" href="<%= blog_url %>">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="<%= title %>">
+  <meta name="description" content="<%= description %>">
+  <meta property="og:url" content="<%= blog_url %>">
+  <meta property="og:site_name" content="<%= site_name  %>">
+  <meta property="article:published_time" content="<%= blog_created_time %>">
+  <% if (blog_update_time) { %>
+  <meta property="article:modified_time" content="<%= blog_update_time %>">
+  <% } %>
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="<%= base_url + headerImage %>">
+  <meta name="twitter:label1" content="Written by">
+  <meta name="twitter:data1" content="<%= author %>">
+  <meta name="twitter:label2" content="Est. reading time">
+  <meta name="twitter:data2" content="5 minutes">
+
+  <title>
+    <%= title %>
+  </title>
+  <link rel="stylesheet" href="/css/blogStyles.css" />
+
+  <!-- Quicksand Font -->
+  <link href="https://fonts.googleapis.com/css?family=Montserrat:600|Poppins:500|Quicksand:500,700|Raleway&amp;display=swap" rel="stylesheet" />
+
+  <!-- slick css -->
+  <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css" />
+
+  <!-- nano gallery -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/nanogallery2/3.0.5/css/nanogallery2.min.css" integrity="sha512-6sOT9zKSKq1CYgNMqtcY84tFPDnG1yX5mxwdGQiAVpAomVr2kUKJ//pFeU/KfaZDVCOru5iFOVswpT4RWWF2dQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <!-- Font awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+
+<body>
+  <%- include('../partials/nav'); -%>
+  <!-- Blog Title and H1 and H2 -->
+  <div class="title-ctn">
+    <div class="blog-text-container">
+      <h1>
+        <%= title %>
+      </h1>
+      <span class="post__byline">
+        By <a href="<%= author_href %>" rel="author" class="fn">
+          <%= author %>
+        </a>
+      </span>
+      ·
+      <time class="post__updated" datetime="<%= blog_date_iso %>">
+        Published at <%= blog_date %>
+      </time>
+      <% if (blog_update_date) { %>
+      ·
+      <time class="post__updated" datetime="<%= blog_update_date_iso %>">
+        last updated at <%= blog_update_date %>
+      </time>
+      <% } %>
+
+      <% if (h1) { %>
+      <h1 class="title-h1">
+        <%= h1 %>
+      </h1>
+      <% } %>
+
+      <% if (h2) { %>
+      <h2 class="title-h2">
+        <%= h2 %>
+      </h2>
+      <% } %>
+    </div>
+
+    <% sets.forEach(function(set, i){ %>
+    <!-- Single image, carousel, gallery -->
+    <% if (set.singleImage) { %>
+    <h2>
+      <div class="blog-container header-image mt-60">
+        <img src="<%= `${base_url}${set.singleImage}` %>" alt="" />
+      </div>
+    </h2>
+    <% } %>
+
+    <div class="blog-container">
+      <!-- image slide with btn -->
+      <% if (set.slideImage) { %>
+      <div>
+        <div id="slick-container<%= i %>">
+          <% set.slideImage.forEach(function(src){ %>
+          <div class="slick-ele">
+            <img src="<%= `${base_url}${src}` %>" />
+          </div>
+          <% }); %>
+        </div>
+        <div class="slick-arrow-ctn">
+          <button id="slick-prev-btn<%= i %>" class="btn"><i class="fas fa-chevron-left"></i></button>
+          <button id="slick-nxt-btn<%= i %>" class="btn"><i class="fas fa-chevron-right"></i></button>
+        </div>
+      </div>
+
+      <% } %>
+      <!-- image gallery -->
+      <div class="gallery-ctn">
+        <!-- <div
+                  data-nanogallery2 = '{
+                        "thumbnailHeight":  150,
+                        "thumbnailWidth":   150,
+                        "itemsBaseURL":     "https://www.wednow.in//media/BridalImages/"
+                      }' >
+                      
+                  <a href = "354/16021617259971.jpg"   data-ngThumb = "354/thumbnails/16021617259971.jpg" ></a>
+                  <a href = "354/16016344149858.jpg"   data-ngThumb = "354/thumbnails/16016344149858.jpg" ></a>
+                  <a href = "397/161511346461835.jpg"   data-ngThumb = "397/thumbnails/161511346461835.jpg" ></a>
+                  <a href = "354/16021617259971.jpg"   data-ngThumb = "354/thumbnails/16021617259971.jpg" ></a>
+                  <a href = "354/16016344149858.jpg"   data-ngThumb = "354/thumbnails/16016344149858.jpg" ></a>
+                  <a href = "397/161511346461835.jpg"   data-ngThumb = "397/thumbnails/161511346461835.jpg" ></a>
+                  <a href = "354/16021617259971.jpg"   data-ngThumb = "354/thumbnails/16021617259971.jpg" ></a>
+                  <a href = "354/16016344149858.jpg"   data-ngThumb = "354/thumbnails/16016344149858.jpg" ></a>
+                  <a href = "397/161511346461835.jpg"   data-ngThumb = "397/thumbnails/161511346461835.jpg" ></a>
+              </div> -->
+
+        <!-- carousel image -->
+        <% if (set.carousel) { %>
+        <div id="carousel-slick-container<%= i %>">
+
+          <% set.carousel.forEach(function(crSrc){ %>
+          <div class="slick-ele">
+            <img src="<%= `${base_url}${crSrc}` %>" />
+          </div>
+          <% }); %>
+
+        </div>
+        <% } %>
+      </div>
+    </div>
+  </div>
+
+  <!-- Blog set -->
+  <div class="blog-text-container">
+    <% if (set.paraTitle) { %>
+    <h2 class="para-title">
+      <strong>
+        <%= set.paraTitle %>
+      </strong>
+    </h2>
+    <% } %>
+
+    <% if (set.para) { %>
+    <p>
+      <%- set.para %>
+    </p>
+    <% } %>
+  </div>
+
+  <% }); %>
+
+  <!-- Bottom bar with two buttons -->
+  <% /* %>
+  <% if (!isBottomBarSettingEmpty) { %>
+  <div class="blog-text-container">
+    <div class="bottom-bar-ctn">
+
+      <!-- H3 -->
+      <% if (bottomBar.h3) { %>
+      <h3>
+        <%= bottomBar.h3 %>
+      </h3>
+      <% } %>
+
+      <!-- h5 -->
+      <% if (bottomBar.h5) { %>
+      <h5>
+        <%= bottomBar.h5 %>
+      </h5>
+      <% } %>
+
+      <!-- buttons -->
+      <div class="bottom-bar-btn-ctn">
+        <!-- Button 1 -->
+        <% if (bottomBar.btn_1_text) { %>
+        <a href="<%= bottomBar.btn_1_url  %> " target="_blank">
+          <button class="btn btn-primary">
+            <%= bottomBar.btn_1_text %>
+          </button>
+        </a>
+        <% } %>
+
+        <!-- Button 2 -->
+        <% if (bottomBar.btn_2_text) { %>
+        <a href="<%= bottomBar.btn_2_url %> " target="_blank">
+          <button class="btn btn-primary">
+            <%= bottomBar.btn_2_text %>
+          </button>
+        </a>
+        <% } %>
+
+      </div>
+    </div>
+  </div>
+  </div>
+  <% } %>
+
+  <% */ %>
+
+  <!-- data to access in script -->
+  <div id="datadiv" data-setslength=<%=sets.length %>></div>
+
+  <!-- Scripts -->
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+  <script type="text/javascript" src="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
+
+  <!-- nano gallery -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/nanogallery2/3.0.5/jquery.nanogallery2.min.js" integrity="sha512-tvpLVnZrWnnNzV2921XEMx4xkFTUF8xg3s+Mi6cvC/R7A6X1FkpBUXPJFa3Xh5uD9BvOZ2tHeYq/5ZqrweW86Q==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+  <!-- carousel settings -->
+  <script>
+    //slide with btn
+
+    const setsLength = document.getElementById('datadiv').dataset.setslength;
+
+    for (let i = 0; i < setsLength; i++) {
+
+      $(`#slick-container${i}`).slick({
+        dots: false,
+        infinite: false,
+        speed: 300,
+        slidesToShow: 2,
+        slidesToScroll: 2,
+        prevArrow: `#slick-prev-btn${i}`,
+        nextArrow: `#slick-nxt-btn${i}`,
+        responsive: [{
+            breakpoint: 1024,
+            settings: {
+              slidesToShow: 2,
+              slidesToScroll: 2,
+              dots: false
+            }
+          },
+          {
+            breakpoint: 600,
+            settings: {
+              slidesToShow: 2,
+              slidesToScroll: 2
+            }
+          },
+          {
+            breakpoint: 480,
+            settings: {
+              slidesToShow: 1,
+              slidesToScroll: 1
+            }
+          }
+        ]
+      });
+
+      //carousel
+      $(`#carousel-slick-container${i}`).slick({
+        dots: false,
+        infinite: false,
+        speed: 300,
+        slidesToShow: 2,
+        slidesToScroll: 2,
+        arrows: false,
+        responsive: [{
+            breakpoint: 1024,
+            settings: {
+              slidesToShow: 1.2,
+              slidesToScroll: 1,
+              dots: false
+            }
+          },
+          {
+            breakpoint: 600,
+            settings: {
+              slidesToShow: 1.1,
+              slidesToScroll: 1
+            }
+          },
+          {
+            breakpoint: 480,
+            settings: {
+              slidesToShow: 1.1,
+              slidesToScroll: 1
+            }
+          }
+        ]
+      });
+
+    }
+  </script>
+
+  <!-- baguetteBox -->
+  <script type="text/javascript">
+    // const lgContainer = document.getElementById('inline-gallery-container');
+    // const inlineGallery = lightGallery(lgContainer, {
+    //     container: lgContainer,
+    //     licenseKey: `0000-0000-000-0000`,
+    //     dynamic: true,
+    //     // Turn off hash plugin in case if you are using it
+    //     // as we don't want to change the url on slide change
+    //     hash: false,
+    //     // Do not allow users to close the gallery
+    //     closable: false,
+    //     // Add maximize icon to enlarge the gallery
+    //     showMaximizeIcon: true,
+    //     // Append caption inside the slide item
+    //     // to apply some animation for the captions (Optional)
+    //     appendSubHtmlTo: '.lg-item',
+    //     // Delay slide transition to complete captions animations
+    //     // before navigating to different slides (Optional)
+    //     // You can find caption animation demo on the captions demo page
+    //     slideDelay: 400,
+    //     dynamicEl: [
+    //         {
+    //             src: 'https://www.wednow.in//media/BridalImages/354/16021617259971.jpg',
+    //             thumb: 'https://www.wednow.in//media/BridalImages/354/thumbnails/16021617259971.jpg',
+    //             subHtml: `<div class="lightGallery-captions">
+    //         <h4>Caption 1</h4>
+    //         <p>Description of the slide 1</p>
+    //     </div>`,
+    //         },
+    //         {
+    //             src: 'https://www.wednow.in//media/BridalImages/354/16016344149858.jpg',
+    //             thumb: 'https://www.wednow.in//media/BridalImages/354/thumbnails/16016344149858.jpg',
+    //             subHtml: `<div class="lightGallery-captions">
+    //         <h4>Caption 2</h4>
+    //         <p>Description of the slide 2</p>
+    //     </div>`,
+    //         },
+    //     ],
+    // });
+
+    // // Since we are using dynamic mode, we need to programmatically open lightGallery
+    // inlineGallery.openGallery();
+  </script>
+</body>
+
+<!-- Footer -->
+<footer class="footer-ctn">
+  <div class="container">
+    <div class="footer-list-ctn">
+      <!-- <div class="footer-list">
+        <h4>Bridal makeup Artists</h4>
+        <ul>
+          <li><a href="https://www.wednow.in/vendors/delhi-ncr/bridal-makeup" target="_blank">Bridal makeup in Delhi NCR </a></li>
+          <li><a href="https://www.wednow.in/vendors/mumbai/bridal-makeup" target="_blank">Bridal makeup in Mumbai </a></li>
+          <li><a href="https://www.wednow.in/vendors/bangalore/bridal-makeup" target="_blank">Bridal makeup in Bangalore </a></li>
+          <li><a href="https://www.wednow.in/vendors/chennai/bridal-makeup" target="_blank">Bridal makeup in Chennai </a></li>
+          <li><a href="https://www.wednow.in/vendors/pune/bridal-makeup" target="_blank">Bridal makeup in Pune </a></li>
+          <li><a href="https://www.wednow.in/vendors/hyderabad/bridal-makeup" target="_blank">Bridal makeup in Hyderabad </a></li>
+        </ul>
+      </div>
+      <div class="footer-list">
+        <h4>Wedding Venues</h4>
+        <ul>
+          <li><a href="https://www.wednow.in/vendors/delhi-ncr/venue" target="_blank">Wedding Venues in Delhi NCR </a></li>
+          <li><a href="https://www.wednow.in/vendors/mumbai/venue" target="_blank">Wedding Venues in Mumbai </a></li>
+          <li><a href="https://www.wednow.in/vendors/bangalore/venue" target="_blank">Wedding Venues in Bangalore </a></li>
+          <li><a href="https://www.wednow.in/vendors/chennai/venue" target="_blank">Wedding Venues in Chennai </a></li>
+          <li><a href="https://www.wednow.in/vendors/pune/venue" target="_blank">Wedding Venues in Pune </a></li>
+          <li><a href="https://www.wednow.in/vendors/hyderabad/venue" target="_blank">Wedding Venues in Hyderabad </a></li>
+        </ul>
+      </div>
+      <div class="footer-list">
+        <h4>Wedding Photographers</h4>
+        <ul>
+          <li><a href="https://www.wednow.in/vendors/delhi-ncr/photographer" target="_blank">Wedding Photographers in Delhi NCR </a></li>
+          <li><a href="https://www.wednow.in/vendors/mumbai/photographer" target="_blank">Wedding Photographers in Mumbai </a></li>
+          <li><a href="https://www.wednow.in/vendors/bangalore/photographer" target="_blank">Wedding Photographers in Bangalore </a></li>
+          <li><a href="https://www.wednow.in/vendors/chennai/photographer" target="_blank">Wedding Photographers in Chennai </a></li>
+          <li><a href="https://www.wednow.in/vendors/pune/photographer" target="_blank">Wedding Photographers in Pune </a></li>
+          <li><a href="https://www.wednow.in/vendors/hyderabad/photographer" target="_blank">Wedding Photographers in Hyderabad </a></li>
+        </ul>
+      </div>
+      <div class="footer-list">
+        <h4>Wedding Decorators</h4>
+        <ul>
+          <li><a href="https://www.wednow.in/vendors/delhi-ncr/decorators" target="_blank">Wedding Decorators in Delhi NCR </a></li>
+          <li><a href="https://www.wednow.in/vendors/mumbai/decorators" target="_blank">Wedding Decorators in Mumbai </a></li>
+          <li><a href="https://www.wednow.in/vendors/bangalore/decorators" target="_blank">Wedding Decorators in Bangalore </a></li>
+          <li><a href="https://www.wednow.in/vendors/chennai/decorators" target="_blank">Wedding Decorators in Chennai </a></li>
+          <li><a href="https://www.wednow.in/vendors/pune/decorators" target="_blank">Wedding Decorators in Pune </a></li>
+          <li><a href="https://www.wednow.in/vendors/hyderabad/decorators" target="_blank">Wedding Decorators in Hyderabad </a></li>
+        </ul>
+      </div>
+      <div class="footer-list">
+        <h4>Sitemps</h4>
+        <ul>
+          <li><a href="https://www.wednow.in/sitemap.html" target="_blank"> WedNow sitemap </a></li>
+          <li><a href="https://www.wednow.in/blogs/sitemap" target="_blank">WedNow Blogs sitemap </a></li>
+        </ul>
+      </div> -->
+    </div>
+
+    <div class="copyright-ctn">
+      <span> &#169; 2023 Blog Site Pvt LTD. All rights reserved</span>
+    </div>
+  </div>
+</footer>
+
+</html>

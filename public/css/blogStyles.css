@@ -1,0 +1,277 @@
+body {
+	margin: 0;
+	box-sizing: border-box;
+	font-family: Quicksand;
+	font-size: 15px;
+}
+
+a {
+	color: black;
+	white-space: initial;
+	word-wrap: break-word;
+}
+
+p {
+	font-size: 1.3em;
+	line-height: 1.7rem;
+}
+
+button {
+	font-family: Quicksand;
+	font-size: 1rem;
+	white-space: initial;
+	word-wrap: break-word;
+}
+
+/* ======================= Navs =================================== */
+
+nav {
+	height: 50px;
+	width: 100%;
+	border-bottom: 0.8px solid #ccc;
+	padding: 15px 0;
+	position: sticky;
+	top: 0;
+	z-index: 1;
+	background-color: #fff;
+}
+
+.logo-ctn {
+	width: 170px;
+	display: flex;
+	justify-content: space-between;
+}
+
+.logo-ctn h1 {
+	font-family: Quicksand;
+	font-weight: 700;
+	line-height: 0.7;
+}
+
+.logo-ctn img {
+	object-fit: contain;
+	width: 40px;
+	max-height: 100%;
+}
+
+/* ======================= UTILS =================================== */
+.container {
+	max-width: 1200px;
+	width: 90%;
+	margin: auto;
+}
+
+.blog-text-container {
+	margin: 0 20%;
+	max-width: 100%;
+}
+
+.blog-container {
+	margin: 0 15%;
+}
+
+.title-h1 {
+	margin-top: 7%;
+	font-size: 1.5rem;
+	font-weight: 100;
+	white-space: initial;
+	word-wrap: break-word;
+}
+
+.title-h2 {
+	font-size: 1.4rem;
+	font-weight: 100;
+	white-space: initial;
+	word-wrap: break-word;
+}
+
+.para-title {
+	font-weight: 520;
+	font-size: 1.4rem;
+	line-height: 2rem;
+	white-space: initial;
+	word-wrap: break-word;
+}
+
+.mt-60 {
+	margin-top: 60px;
+}
+
+.m-20 {
+	margin: 20px;
+}
+
+.btn {
+	border-radius: 6px;
+	border: none;
+	padding: 12px 14px;
+	width: 130px;
+}
+
+.btn-primary {
+	background-image: radial-gradient(circle at center right,
+			#ff385c 0,
+			#e61e4d 27.5%,
+			#e31c5f 40%,
+			#d70466 57.5%,
+			#bd1e59 75%,
+			#bd1e59 100%);
+	color: white;
+}
+
+/* ======================= Blog title =================================== */
+
+.title-ctn {
+	margin-top: 8%;
+	font-family: Quicksand;
+	margin-bottom: 2%;
+}
+
+.title-ctn h1 {
+	white-space: initial;
+	word-wrap: break-word;
+}
+
+/* images under blog title */
+.header-image img {
+	object-fit: cover;
+	object-position: center;
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+	width: 100%;
+	border-radius: 3%;
+}
+
+/* carousel slick */
+.slick-ele {
+	margin: 20px;
+}
+
+.slick-ele img {
+	object-fit: cover;
+	object-position: center;
+	width: 100%;
+	border-radius: 3%;
+	height: 400px;
+}
+
+.slick-arrow-ctn {
+	margin-top: 20px;
+}
+
+.slick-arrow-ctn button {
+	width: auto;
+}
+
+/* light gallery */
+.gallery-ctn {
+	margin: 40px 0;
+}
+
+#static-thumbnails a {
+	height: 200px;
+	max-height: 200px;
+}
+
+/* ======================= Bottom Bar =============================== */
+
+.bottom-bar-ctn {
+	margin-top: 3rem;
+	width: 100%;
+	border: 1px solid black;
+	border-radius: 15px;
+	padding: 2%;
+}
+
+.bottom-bar-ctn h3 {
+	white-space: initial;
+	word-wrap: break-word;
+}
+
+.bottom-bar-ctn h5 {
+	white-space: initial;
+	word-wrap: break-word;
+}
+
+.bottom-bar-btn-ctn {
+	width: 100%;
+}
+
+.bottom-bar-btn-ctn button {
+	min-width: 40%;
+	height: 50px;
+	margin-right: 8px;
+}
+
+/* ======================= FOOTER =================================== */
+
+.footer-ctn {
+	margin-top: 10%;
+	padding: 15px 0;
+	border-top: 1px solid #ccc;
+	width: 100%;
+}
+
+.footer-ctn ul {
+	padding: 0;
+	list-style-type: none;
+}
+
+.footer-ctn ul li {
+	padding: 7px 0;
+	font-size: 14px;
+}
+
+.footer-list-ctn {
+	display: flex;
+}
+
+.footer-list {
+	flex: 1;
+	justify-content: space-between;
+}
+
+.copyright-ctn {
+	width: 100%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+@media (max-width: 500px) {
+
+	.blog-text-container,
+	.blog-container {
+		margin: 6%;
+	}
+
+	.slick-ele {
+		margin: 2px;
+	}
+
+	.bottom-bar-ctn {
+		position: fixed;
+		bottom: 0;
+		margin: 0;
+		width: 100%;
+		left: 0;
+		border: none;
+		z-index: 9999;
+		border-radius: 0;
+		background-color: white;
+		padding: 24px 12px;
+		box-shadow: rgba(14, 30, 37, 0.12) 0px 2px 4px 0px,
+			rgba(14, 30, 37, 0.32) 0px 2px 16px 0px;
+	}
+
+	.footer-list-ctn {
+		flex-direction: column;
+	}
+
+	.bottom-bar-btn-ctn button {
+		min-width: 45%;
+		height: 50px;
+		margin-right: 3px;
+	}
+}

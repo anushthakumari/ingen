@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <link rel="icon" href="/favicon.ico" />
+
+  <!-- apple touch icon -->
+  <link rel="apple-touch-icon" sizes="180x180" href="/logo192.png">
+
+  <!-- SEO -->
+   <link rel="canonical" href="<%= url %>">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="<%= title %>">
+  <meta name="description" content="<%= description %>">
+  <meta property="og:url" content="<%= url %>">
+  <meta property="og:site_name" content="<%= site_name  %>">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="/favicon.ico">
+
+  <title>
+    <%= title %>
+  </title>
+  <link rel="stylesheet" href="/css/blog-sitemap-blogStyles.css" />
+
+  <!-- Quicksand Font -->
+  <link href="https://fonts.googleapis.com/css?family=Montserrat:600|Poppins:500|Quicksand:500,700|Raleway&amp;display=swap" rel="stylesheet" />
+
+  <!-- Font awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+
+</head>
+
+<body>
+
+  <!-- NAVBAR -->
+  <!-- <nav>
+	<div class="container">
+		<a class="logo-ctn">
+			<img
+				src="https://www.wednow.in/static/media/logo.9f98b1b6.png"
+				alt="WedNow logo"
+			/>
+			<h1>WedNow Blogs</h1>
+      
+		</a>
+    <div class="home"><a href="#">Home</a></div>
+	</div>
+</nav> -->
+
+  <nav>
+    <div class="container">
+      <a class="logo-ctn">
+        <img src="/logo512.png" alt="WedNow logo" /><span></span><span>Blogs</span></a>
+    </div>
+  </nav>
+
+  <!-- Blog Title and H1 and H2 -->
+  <div class="title-ctn">
+    <div class="blog-text-container">
+      <h1 class="heading">
+        Blogs
+      </h1>
+
+     <div class="card-list">
+       <% blogs_text_hrefs.forEach(function(dt){ %>
+        <a class="card-container"  href="<%=`${base_url}${dt.href}`%>" target="_blank">
+           <img src="<%=`${base_url}${dt.header_image_url}`%>" alt="<%= dt.text %>" width="100" height="100" />
+          <div class="text-container">
+            <h1 class="title-h1"><%= dt.text%></h1>
+            <p><%= dt.desc %></p>
+          </div>
+        </a>
+      <% }); %>
+     </div>
+    </div>
+
+    <div class="blog-container">
+
+    </div>
+  </div>
+
+
+
+
+  <!-- Bottom bar with two buttons -->
+
+
+  <% /* %>
+  <div class="blog-text-container">
+    <div class="bottom-bar-ctn">
+      <div class="title-h5">
+        <h5>Find the best wedding vendors for your wedding</h5>
+      </div>
+      <div class="title-h6">
+        <h6>trusted by 1000's of Brides and Grooms for their functions.</h6>
+      </div>
+
+      <!-- buttons -->
+      <div class="bottom-bar-btn-ctn">
+        <!-- Button 1 -->
+        <a href="https://www.wednow.in/" target="_blank">
+          <button class="btn btn-primary">
+            Find Vendors
+          </button>
+        </a>
+
+        <!-- Button 2 -->
+        <a href="https://www.wednow.in/" target="_blank">
+          <button class="btn btn-primary">
+            Begin Wedding Planning
+          </button>
+        </a>
+
+      </div>
+    </div>
+  </div>
+  </div>
+  <% */ %>
+
+
+  <!-- Footer -->
+
+  <footer class="footer-ctn">
+    <div class="container">
+      <!-- <div class="footer-list-ctn">
+        <div class="footer-list">
+          <h4>Bridal makeup Artists</h4>
+          <ul>
+            <li><a href="https://www.wednow.in/vendors/delhi-ncr/bridal-makeup" target="_blank">Bridal makeup in Delhi
+                NCR </a></li>
+            <li><a href="https://www.wednow.in/vendors/mumbai/bridal-makeup" target="_blank">Bridal makeup in Mumbai
+              </a></li>
+            <li><a href="https://www.wednow.in/vendors/bangalore/bridal-makeup" target="_blank">Bridal makeup in
+                Bangalore </a></li>
+            <li><a href="https://www.wednow.in/vendors/chennai/bridal-makeup" target="_blank">Bridal makeup in Chennai
+              </a></li>
+            <li><a href="https://www.wednow.in/vendors/pune/bridal-makeup" target="_blank">Bridal makeup in Pune </a>
+            </li>
+            <li><a href="https://www.wednow.in/vendors/hyderabad/bridal-makeup" target="_blank">Bridal makeup in
+                Hyderabad </a></li>
+          </ul>
+        </div>
+        <div class="footer-list">
+          <h4>Wedding Venues</h4>
+          <ul>
+            <li><a href="https://www.wednow.in/vendors/delhi-ncr/venue" target="_blank">Wedding Venues in Delhi NCR
+              </a></li>
+            <li><a href="https://www.wednow.in/vendors/mumbai/venue" target="_blank">Wedding Venues in Mumbai </a></li>
+            <li><a href="https://www.wednow.in/vendors/bangalore/venue" target="_blank">Wedding Venues in Bangalore
+              </a></li>
+            <li><a href="https://www.wednow.in/vendors/chennai/venue" target="_blank">Wedding Venues in Chennai </a>
+            </li>
+            <li><a href="https://www.wednow.in/vendors/pune/venue" target="_blank">Wedding Venues in Pune </a></li>
+            <li><a href="https://www.wednow.in/vendors/hyderabad/venue" target="_blank">Wedding Venues in Hyderabad
+              </a></li>
+          </ul>
+        </div>
+        <div class="footer-list">
+          <h4>Wedding Photographers</h4>
+          <ul>
+            <li><a href="https://www.wednow.in/vendors/delhi-ncr/photographer" target="_blank">Wedding Photographers in
+                Delhi NCR </a></li>
+            <li><a href="https://www.wednow.in/vendors/mumbai/photographer" target="_blank">Wedding Photographers in
+                Mumbai </a></li>
+            <li><a href="https://www.wednow.in/vendors/bangalore/photographer" target="_blank">Wedding Photographers in
+                Bangalore </a></li>
+            <li><a href="https://www.wednow.in/vendors/chennai/photographer" target="_blank">Wedding Photographers in
+                Chennai </a></li>
+            <li><a href="https://www.wednow.in/vendors/pune/photographer" target="_blank">Wedding Photographers in Pune
+              </a></li>
+            <li><a href="https://www.wednow.in/vendors/hyderabad/photographer" target="_blank">Wedding Photographers in
+                Hyderabad </a></li>
+          </ul>
+        </div>
+        <div class="footer-list">
+          <h4>Wedding Decorators</h4>
+          <ul>
+            <li><a href="https://www.wednow.in/vendors/delhi-ncr/decorators" target="_blank">Wedding Decorators in
+                Delhi NCR </a></li>
+            <li><a href="https://www.wednow.in/vendors/mumbai/decorators" target="_blank">Wedding Decorators in Mumbai
+              </a></li>
+            <li><a href="https://www.wednow.in/vendors/bangalore/decorators" target="_blank">Wedding Decorators in
+                Bangalore </a></li>
+            <li><a href="https://www.wednow.in/vendors/chennai/decorators" target="_blank">Wedding Decorators in
+                Chennai </a></li>
+            <li><a href="https://www.wednow.in/vendors/pune/decorators" target="_blank">Wedding Decorators in Pune </a>
+            </li>
+            <li><a href="https://www.wednow.in/vendors/hyderabad/decorators" target="_blank">Wedding Decorators in
+                Hyderabad </a></li>
+          </ul>
+        </div>
+         <div class="footer-list">
+          <h4>Sitemps</h4>
+          <ul>
+             <li><a href="https://www.wednow.in/sitemap.html" target="_blank"> WedNow sitemap </a></li>
+          <li><a href="https://www.wednow.in/blogs/sitemap" target="_blank">WedNow Blogs sitemap </a></li>
+          </ul>
+        </div>
+      </div> -->
+      <!-- <div class="footer-list-ctn">
+            <div class="footer-list">
+              <h4>Wedding Photographers</h4>
+              <ul>
+                <li><a href="https://www.wednow.in/vendors/delhi-ncr/photographer" target="_blank">Wedding Photographers in Delhi NCR </a></li>
+                <li><a href="https://www.wednow.in/vendors/mumbai/photographer" target="_blank">Wedding Photographers in Mumbai </a></li>
+                <li><a href="https://www.wednow.in/vendors/bangalore/photographer" target="_blank">Wedding Photographers in Bangalore </a></li>
+                <li><a href="https://www.wednow.in/vendors/chennai/photographer" target="_blank">Wedding Photographers in Chennai </a></li>
+                <li><a href="https://www.wednow.in/vendors/pune/photographer" target="_blank">Wedding Photographers in Pune </a></li>
+                <li><a href="https://www.wednow.in/vendors/hyderabad/photographer" target="_blank">Wedding Photographers in Hyderabad </a></li>
+              </ul>
+            </div>
+            <div class="footer-list">
+              <h4>Wedding Decorators</h4>
+              <ul>
+                <li><a href="https://www.wednow.in/vendors/delhi-ncr/decorators" target="_blank">Wedding Decorators in Delhi NCR </a></li>
+                <li><a href="https://www.wednow.in/vendors/mumbai/decorators" target="_blank">Wedding Decorators in Mumbai </a></li>
+                <li><a href="https://www.wednow.in/vendors/bangalore/decorators" target="_blank">Wedding Decorators in Bangalore </a></li>
+                <li><a href="https://www.wednow.in/vendors/chennai/decorators" target="_blank">Wedding Decorators in Chennai </a></li>
+                <li><a href="https://www.wednow.in/vendors/pune/decorators" target="_blank">Wedding Decorators in Pune </a></li>
+                <li><a href="https://www.wednow.in/vendors/hyderabad/decorators" target="_blank">Wedding Decorators in Hyderabad </a></li>
+              </ul>
+            </div>
+          </div> -->
+      <div class="copyright-ctn">
+        <span> &#169; 2023 Blog Site Pvt LTD. All rights reserved</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+
+</body>
+
+
+</html>

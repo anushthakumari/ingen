@@ -30,7 +30,7 @@ app.get("*", (req, res) => {
 
 app.use(errorHandler);
 
-const port = 80;
+const port = 3000;
 app.listen(port, () => {
 	console.log(`Server is running on port ${port}`);
 });

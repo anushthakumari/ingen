@@ -37,13 +37,18 @@ exports.imageUpload = [
 		if (type === "array") {
 			res.send({
 				message: "upload success!",
-				data: req.files.map((fd) => fd.path.split(pathModule.sep).join("/")),
+				data: req.files.map((fd) =>
+					fd.path.split(pathModule.sep).join("/").replace("images/", "media/")
+				),
 			});
 			return;
 		}
 		res.send({
 			message: "upload success!",
-			data: req.file.path.split(pathModule.sep).join("/"),
+			data: req.file.path
+				.split(pathModule.sep)
+				.join("/")
+				.replace("images/", "media/"),
 		});
 	}),
 ];

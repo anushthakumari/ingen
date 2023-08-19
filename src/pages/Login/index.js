@@ -33,6 +33,47 @@ function Login() {
 		}
 	};
 
+	const register = async (e) => {
+		e.preventDefault();
+		try {
+			const name = e.currentTarget.name.value.trim();
+			const email = e.currentTarget.email.value.trim();
+			const pass = e.currentTarget.pass.value.trim();
+
+			if (!/[a-zA-Z][a-zA-Z ]+[a-zA-Z]$/.test(name)) {
+				alert("Invalid name, name should only contain alphabets!");
+				return;
+			}
+
+			if (pass.length > 10 || pass.length < 4) {
+				alert(
+					"password should have minimum 4 characters and maximum 10 characters"
+				);
+				return;
+			}
+
+			setisLoading(true);
+
+			const { data } = await usersAPI.register({
+				email,
+				pass: password,
+				name,
+			});
+			localStorage.setItem(localstorageKeys.token, data.token);
+			localStorage.setItem(localstorageKeys.role, data.role);
+			setisLoading(false);
+			history.push("/");
+		} catch (error) {
+			console.log(error);
+			if (error.response) {
+				alert(error.response.data.message);
+			} else {
+				alert("something went wrong!");
+			}
+			setisLoading(false);
+		}
+	};
+
 	React.useEffect(() => {
 		if (localStorage.getItem(localstorageKeys.token)) {
 			history.push("/");
@@ -43,12 +84,29 @@ function Login() {
 		<div className="login-container">
 			<Components.Container>
 				<Components.SignUpContainer isLoadingIn={signIn}>
-					<Components.Form>
+					<Components.Form onSubmit={register}>
 						<Components.Title>Create Account</Components.Title>
-						<Components.Input type="text" placeholder="Name" />
-						<Components.Input type="email" placeholder="Email" />
-						<Components.Input type="password" placeholder="Password" />
-						<Components.Button>Sign Up</Components.Button>
+						<Components.Input
+							type="text"
+							name="name"
+							placeholder="Name"
+							required
+						/>
+						<Components.Input
+							type="email"
+							name="email"
+							placeholder="Email"
+							required
+						/>
+						<Components.Input
+							type="password"
+							name="pass"
+							placeholder="Password"
+							required
+						/>
+						<Components.Button disabled={isLoading}>
+							{isLoading ? "Loading.." : "Sign Up"}
+						</Components.Button>
 					</Components.Form>
 				</Components.SignUpContainer>
 

@@ -27,7 +27,7 @@ module.exports = (uploadPath, allowedTypes = []) => {
 
 	const storage = multer.diskStorage({
 		destination: function (req, file, cb) {
-			cb(null, `./media/${uploadPath}`);
+			cb(null, `./images/${uploadPath}`);
 		},
 		filename: function (req, file, cb) {
 			cb(null, `${Date.now()}_${slugify(file.originalname)}`);

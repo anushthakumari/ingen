@@ -21,7 +21,7 @@ app.use("/pages", staticroutes);
 
 // // Serve static files from the "build" directory
 app.use(express.static("build"));
-app.use("/media", express.static("media"));
+app.use("/media", express.static("images"));
 
 // Serve the index.html file for all routes
 app.get("*", (req, res) => {

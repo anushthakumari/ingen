@@ -32,3 +32,37 @@ exports.login = asyncHandler(async (req, res, next) => {
 		role: rows[0].role,
 	});
 });
+
+exports.register = asyncHandler(async (req, res, next) => {
+	const { email, pass, name } = req.body;
+	const role = "editor";
+
+	const { rowCount } = await pool.query({
+		text: `SELECT * FROM users where email=$1`,
+		values: [email],
+	});
+
+	if (rowCount) {
+		res.status(400).send({
+			message: "User with this email already exists!",
+		});
+		return;
+	}
+
+	const { rows: inRows } = await pool.query({
+		text: `INSERT INTO users(name, email, password, role) VALUES($1, $2, $3, $4) RETURNING id`,
+		values: [name, email, pass, role],
+	});
+
+	const token = generateToken({
+		id: inRows[0].id,
+		email,
+		role,
+	});
+
+	res.send({
+		message: "Login successfull",
+		token,
+		role,
+	});
+});

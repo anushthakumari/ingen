@@ -56,7 +56,7 @@ function Login() {
 
 			const { data } = await usersAPI.register({
 				email,
-				pass: password,
+				pass,
 				name,
 			});
 			localStorage.setItem(localstorageKeys.token, data.token);

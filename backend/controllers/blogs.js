@@ -317,3 +317,7 @@ exports.toggleBlogPublish = asyncHandler(async (req, res, next) => {
 
 	res.send({ message: "data updated successfully!", data: { blog_id: id } });
 });
+
+exports.getHome = asyncHandler(async (req, res, next) => {
+	res.render("home_page");
+});

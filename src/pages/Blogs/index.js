@@ -53,7 +53,7 @@ const BlogList = () => {
 
 	const handleLogOut = () => {
 		logout();
-		browserHistory.push("/login");
+		browserHistory.push("/creator/login");
 	};
 
 	useEffect(() => {
@@ -134,7 +134,9 @@ const BlogList = () => {
 										<TableCell align="right">
 											<IconButton
 												onClick={() =>
-													browserHistory.push(`/blog/edit/${row.blog_id}`)
+													browserHistory.push(
+														`/creator/blog/edit/${row.blog_id}`
+													)
 												}>
 												<EditIcon color="primary" />
 											</IconButton>

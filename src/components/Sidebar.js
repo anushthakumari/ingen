@@ -13,11 +13,11 @@ import MenuIcon from "@mui/icons-material/Menu";
 const routes = [
 	{
 		title: "Blogs",
-		path: "/",
+		path: "/creator",
 	},
 	{
 		title: "Categories",
-		path: "/categories",
+		path: "/creator/categories",
 	},
 ];
 

@@ -167,6 +167,7 @@ function CatModal({ handleClose, open, isEdit, title, id }) {
 			}
 
 			alert("Saved successfully!");
+			handleClose();
 		} catch (error) {
 			alert("Something went wrong!!");
 		} finally {

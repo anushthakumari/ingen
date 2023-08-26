@@ -15,7 +15,7 @@ function PrivateRoute({ Comp, ...rest }) {
 				) : (
 					<Redirect
 						to={{
-							pathname: "/login",
+							pathname: "/creator/login",
 						}}
 					/>
 				);

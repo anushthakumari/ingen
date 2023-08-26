@@ -16,13 +16,13 @@ export default function App() {
 		<Router>
 			<Sidebar />
 			<Switch>
-				<Route path={"/login"}>
+				<Route path={"/creator/login"}>
 					<Login />
 				</Route>
 				<BlogsListContext>
-					<PrivateRoute exact path={"/"} Comp={Blogs} />
-					<PrivateRoute exact path={"/categories"} Comp={Categories} />
-					<PrivateRoute path={"/blog/edit/:id"} Comp={Editor} />
+					<PrivateRoute exact path={"/creator"} Comp={Blogs} />
+					<PrivateRoute exact path={"/creator/categories"} Comp={Categories} />
+					<PrivateRoute path={"/creator/blog/edit/:id"} Comp={Editor} />
 				</BlogsListContext>
 			</Switch>
 		</Router>

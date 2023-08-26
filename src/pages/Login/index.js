@@ -28,7 +28,7 @@ function Login() {
 			localStorage.setItem(localstorageKeys.token, data.token);
 			localStorage.setItem(localstorageKeys.role, data.role);
 			setisLoading(false);
-			history.push("/");
+			history.push("/creator");
 		} catch (error) {
 			alert("Invalid credentials!!");
 			setisLoading(false);

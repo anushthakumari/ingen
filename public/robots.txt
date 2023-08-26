@@ -1,3 +1,6 @@
 # https://www.robotstxt.org/robotstxt.html
+
 User-agent: *
-Disallow:
+Disallow: /creator/*
+
+Sitemap: https://www.ingenral.com/pages/sitemap

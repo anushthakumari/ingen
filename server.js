@@ -21,6 +21,11 @@ app.use(bodyParser.urlencoded({ extended: true }));
 //Serve static files from the "build" directory
 app.use("/", async (req, res, next) => {
 	const filename = req.originalUrl;
+
+	if (filename === "/") {
+		return next();
+	}
+
 	const filepath = path.join(__dirname, "build", filename);
 
 	if (filename.startsWith("/creator")) {

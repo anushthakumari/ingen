@@ -1,11 +1,13 @@
 import React from "react";
 import { useHistory } from "react-router-dom";
+// import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 
 import CircularProgress from "@mui/material/CircularProgress";
 
 import * as Components from "./Components";
 import * as usersAPI from "../../apis/users.apis";
 import localstorageKeys from "../../constants/localstorage.constants";
+// import { app } from "../../configs/firebase.configs";
 
 function Login() {
 	const [signIn, toggle] = React.useState(true);
@@ -135,6 +137,20 @@ function Login() {
 							{isLoading ? <CircularProgress size={20} /> : null}
 							Sigin In
 						</Components.Button>
+						<Components.SignInDiv>
+							<div class="google-btn">
+								<div class="google-icon-wrapper">
+									<img
+										alt="google"
+										class="google-icon"
+										src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg"
+									/>
+								</div>
+								<p class="btn-text">
+									<b>Sign in with google</b>
+								</p>
+							</div>
+						</Components.SignInDiv>
 					</Components.Form>
 				</Components.SignInContainer>
 

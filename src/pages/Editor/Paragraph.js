@@ -9,6 +9,9 @@ import {
 	ListItemButton,
 } from "@mui/material";
 
+import Typography from "@mui/material/Typography";
+import Modal from "@mui/material/Modal";
+
 import FileUploadField from "./FileUpload.Field";
 import { useBlogList } from "../../context/BlogList.context";
 import configs from "../../configs";
@@ -22,6 +25,10 @@ const Paragraph = ({
 	const { rows } = useBlogList();
 
 	const [search_result, setsearch_result] = useState([]);
+	const [extLinkModal, setextLinkModal] = useState({
+		isOpen: false,
+		index: -1,
+	});
 
 	const [tagState, settagState] = useState({
 		is_search_start: false,
@@ -89,12 +96,32 @@ const Paragraph = ({
 		setfieldsStructure(newFormValues);
 	};
 
+	let handleExtSubmit = (e) => {
+		e.stopPropagation();
+		e.preventDefault();
+		const caption = e.currentTarget.caption.value.trim();
+		const link = e.currentTarget.link.value.trim();
+
+		const anchor_text = "@" + caption;
+		const anchor_url = link;
+		const anchor_tag = `<a href="${anchor_url}" target="_blank" >${anchor_text}</a>`;
+
+		setfieldsStructure((prev) => {
+			const i = extLinkModal.index;
+			let newFormValues = [...prev];
+			newFormValues[i]["para"] = newFormValues[i]["para"] + " " + anchor_tag;
+			return newFormValues;
+		});
+
+		setextLinkModal({ isOpen: false, index: 0 });
+	};
+
 	let handleTagItemClick = (data = {}) => {
 		let newFormValues = [...fieldsStructure];
 
 		const anchor_text = "@" + data.title;
 		const anchor_url =
-			configs.BASE_URL + "/pages/articles/wedding/" + data.slug;
+			configs.BASE_URL + "/pages/articles/" + data.cat_slug + "/" + data.slug;
 		const anchor_tag = `<a href="${anchor_url}" target="_blank" >${anchor_text}</a>`;
 
 		newFormValues[data.index]["para"] =
@@ -256,6 +283,7 @@ const Paragraph = ({
 													title: v.title,
 													slug: v.slug,
 													index: tagState.fields_structure_index,
+													cat_slug: v.cat_slug,
 												})}
 												dense>
 												<ListItemText primary={v.title} />
@@ -265,6 +293,10 @@ const Paragraph = ({
 								</List>
 							</Box>
 						) : null}
+
+						<Button onClick={() => setextLinkModal({ isOpen: true, index })}>
+							Add External Link
+						</Button>
 					</Box>
 				</div>
 			))}
@@ -276,11 +308,54 @@ const Paragraph = ({
 				onClick={handleADDclick}>
 				ADD MORE PARAGRAPH
 			</Button>
+
+			<Modal
+				open={extLinkModal.isOpen}
+				onClose={() => setextLinkModal({ isOpen: false, index: 0 })}
+				aria-labelledby="modal-modal-title"
+				aria-describedby="modal-modal-description">
+				<Box component={"form"} onSubmit={handleExtSubmit} sx={style}>
+					<Typography> Add External Link</Typography>
+					<Box m={1} pt={3}>
+						<TextField
+							name="caption"
+							label="Link Caption"
+							type="text"
+							fullWidth
+							required
+						/>
+					</Box>
+					<Box m={1} pt={3}>
+						<TextField
+							name="link"
+							type="url"
+							label="Complete Url"
+							required
+							fullWidth
+						/>
+					</Box>
+					<Button fullWidth type="submit">
+						Submit
+					</Button>
+				</Box>
+			</Modal>
 		</div>
 	);
 };
 
 export default Paragraph;
+
+var style = {
+	position: "absolute",
+	top: "50%",
+	left: "50%",
+	transform: "translate(-50%, -50%)",
+	width: 400,
+	bgcolor: "background.paper",
+	border: "2px solid #000",
+	boxShadow: 24,
+	p: 4,
+};
 
 var alphabets = (() => {
 	const caps = [...Array(26)].map((val, i) => String.fromCharCode(i + 65));

@@ -16,15 +16,17 @@ exports.addCategory = asyncHandler(async (req, res, next) => {
 	const { title } = req.body;
 
 	if (!title || !title?.trim()) {
-		return res.status(400).send("title is required!");
+		return res.status(400).send({ message: "title is required!" });
 	}
 
-	const slug = slugify(title);
+	const slug = slugify(title, {
+		lower: true,
+	});
 
 	const slug_data = await cat_services.get_cat_by_slug(slug);
 
 	if (slug_data) {
-		return res.status(400).send("This category already exists!");
+		return res.status(400).send({ message: "This category already exists!" });
 	}
 
 	let q = {
@@ -42,15 +44,20 @@ exports.updateCategory = asyncHandler(async (req, res, next) => {
 	const { title } = req.body;
 
 	if (!title || !title?.trim()) {
-		return res.status(400).send("title is required!");
+		return res.status(400).send({ message: "title is required!" });
 	}
 
-	const slug = slugify(title);
+	const slug = slugify(title, {
+		lower: true,
+	});
 
-	const slug_data = await cat_services.get_cat_by_slug(slug);
+	const slug_data = await pool.query({
+		text: "select * from categories where id!=$1 and slug=$2",
+		values: [id, slug],
+	});
 
-	if (slug_data) {
-		return res.status(400).send("This category already exists!");
+	if (slug_data.rowCount) {
+		return res.status(400).send({ message: "This category already exists!" });
 	}
 
 	let q = {

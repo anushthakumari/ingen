@@ -26,13 +26,13 @@ const CreateBlog = ({ open, handleClose }) => {
 
 	const handleSubmit = (e) => {
 		e.preventDefault();
-		if (title.trim().length < 8) {
-			alert("Title must be atleast 8 characters long");
+		if (title.trim().length < 1) {
+			alert("Title must be atleast 1 characters long");
 			return;
 		}
 
-		if (desc.trim().length < 10) {
-			alert("description must be atleast 10 characters long");
+		if (desc.trim().length < 1) {
+			alert("description must be atleast 1 characters long");
 			return;
 		}
 
@@ -42,7 +42,7 @@ const CreateBlog = ({ open, handleClose }) => {
 				let {
 					data: { blog_id },
 				} = await createBlog({ title, desc });
-				browserHistory.push(`/blog/edit/${blog_id}`);
+				browserHistory.push(`/creator/blog/edit/${blog_id}`);
 			} catch (error) {
 				alert("something went wrong!");
 			} finally {

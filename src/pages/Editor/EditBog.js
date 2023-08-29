@@ -39,8 +39,17 @@ const EditBog = ({
 			setisLoading(true);
 			await togglePublish(initialValues.blog_id, !is_published);
 			setis_published(!is_published);
+			if (is_published === false) {
+				alert("blog is published!");
+			} else {
+				alert("blog is unpublished!");
+			}
 		} catch (error) {
-			alert("Something went wrong!");
+			if (error.response) {
+				alert(error.response.data.message);
+			} else {
+				alert("Something went wrong!!");
+			}
 		} finally {
 			setisLoading(false);
 		}
@@ -227,17 +236,17 @@ const EditBog = ({
 				<Divider style={{ margin: "20px 0" }} />
 
 				{/* Bottom bar */}
-				<Typography variant="h5">FIXED BOTTOM BAR SETTINGS</Typography>
+				{/* <Typography variant="h5">FIXED BOTTOM BAR SETTINGS</Typography> */}
 
-				<div
+				{/* <div
 					style={{
 						padding: "8px",
 						margin: "18px",
 						border: "2px solid red",
 						borderRadius: "20px",
-					}}>
-					{/* Bottom bar h3 */}
-					<Field type="number" name="bottom_bar_h3">
+					}}> */}
+				{/* Bottom bar h3 */}
+				{/* <Field type="number" name="bottom_bar_h3">
 						{(props) => {
 							let { field } = props;
 							return (
@@ -258,9 +267,9 @@ const EditBog = ({
 								{errMsg}
 							</Typography>
 						)}
-					</ErrorMessage>
-					{/* Bottom bar h5 */}
-					<Field type="number" name="bottom_bar_h5">
+					</ErrorMessage> */}
+				{/* Bottom bar h5 */}
+				{/* <Field type="number" name="bottom_bar_h5">
 						{(props) => {
 							let { field } = props;
 							return (
@@ -281,9 +290,9 @@ const EditBog = ({
 								{errMsg}
 							</Typography>
 						)}
-					</ErrorMessage>
-					{/* button 1 text */}
-					<Field type="number" name="btn_1_text">
+					</ErrorMessage> */}
+				{/* button 1 text */}
+				{/* <Field type="number" name="btn_1_text">
 						{(props) => {
 							let { field } = props;
 							return (
@@ -297,16 +306,16 @@ const EditBog = ({
 								</Box>
 							);
 						}}
-					</Field>
-					<ErrorMessage name="btn_1_text">
+					</Field> */}
+				{/* <ErrorMessage name="btn_1_text">
 						{(errMsg) => (
 							<Typography color="primary" variant="body2">
 								{errMsg}
 							</Typography>
 						)}
-					</ErrorMessage>
-					{/* button 1 url */}
-					<Field type="number" name="btn_1_url">
+					</ErrorMessage> */}
+				{/* button 1 url */}
+				{/* <Field type="number" name="btn_1_url">
 						{(props) => {
 							let { field } = props;
 							return (
@@ -320,16 +329,16 @@ const EditBog = ({
 								</Box>
 							);
 						}}
-					</Field>
-					<ErrorMessage name="btn_1_url">
+					</Field> */}
+				{/* <ErrorMessage name="btn_1_url">
 						{(errMsg) => (
 							<Typography color="primary" variant="body2">
 								{errMsg}
 							</Typography>
 						)}
-					</ErrorMessage>
-					{/* button 2 text */}
-					<Field type="number" name="btn_2_text">
+					</ErrorMessage> */}
+				{/* button 2 text */}
+				{/* <Field type="number" name="btn_2_text">
 						{(props) => {
 							let { field } = props;
 							return (
@@ -343,16 +352,16 @@ const EditBog = ({
 								</Box>
 							);
 						}}
-					</Field>
-					<ErrorMessage name="btn_2_text">
+					</Field> */}
+				{/* <ErrorMessage name="btn_2_text">
 						{(errMsg) => (
 							<Typography color="primary" variant="body2">
 								{errMsg}
 							</Typography>
 						)}
-					</ErrorMessage>
-					{/* button 2 url */}
-					<Field type="number" name="btn_2_url">
+					</ErrorMessage> */}
+				{/* button 2 url */}
+				{/* <Field type="number" name="btn_2_url">
 						{(props) => {
 							let { field } = props;
 							return (
@@ -366,15 +375,15 @@ const EditBog = ({
 								</Box>
 							);
 						}}
-					</Field>
-					<ErrorMessage name="btn_2_url">
+					</Field> */}
+				{/* <ErrorMessage name="btn_2_url">
 						{(errMsg) => (
 							<Typography color="primary" variant="body2">
 								{errMsg}
 							</Typography>
 						)}
-					</ErrorMessage>
-				</div>
+					</ErrorMessage> */}
+				{/* </div> */}
 
 				{/* Save Button */}
 				<BubbleButon

@@ -77,8 +77,13 @@ const Editor = (props) => {
 				setloading(true);
 				await updateBlogById(BLOG_ID, data);
 				await fetchBlogData();
+				alert("Blog Saved Successfully!!");
 			} catch (error) {
-				alert("Something went wrong!");
+				if (error.response) {
+					alert(error.response.data.message);
+				} else {
+					alert("Something went wrong!!");
+				}
 			} finally {
 				setloading(false);
 			}

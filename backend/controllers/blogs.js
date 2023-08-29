@@ -30,7 +30,9 @@ exports.deleteBlog = asyncHandler(async (req, res, next) => {
 
 exports.createBlog = asyncHandler(async (req, res, next) => {
 	const { title, desc } = req.body;
-	const slug = slugify(title);
+	const slug = slugify(title, {
+		lower: true,
+	});
 	const header_image = "media/default.jpg";
 
 	//query
@@ -44,7 +46,7 @@ exports.createBlog = asyncHandler(async (req, res, next) => {
 exports.getSingleRawBlog = asyncHandler(async (req, res, next) => {
 	const { id } = req.params;
 	let q =
-		"SELECT blogs.*, categories.category FROM blogs left join categories on blogs.category_id=categories.id where blog_id=$1";
+		"SELECT blogs.*, categories.category, categories.slug as cat_slug FROM blogs left join categories on blogs.category_id=categories.id where blog_id=$1";
 	const { rows, rowCount } = await pool.query({
 		text: q,
 		values: [id],
@@ -95,7 +97,9 @@ exports.updateBlog = asyncHandler(async (req, res, next) => {
 
 	console.log({ category_id });
 
-	const slug = slugify(title);
+	const slug = slugify(title, {
+		lower: true,
+	});
 
 	let q = `UPDATE blogs SET 
 					title=$1,

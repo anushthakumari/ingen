@@ -39,33 +39,37 @@
 									alt="sing up image"
 								/>
 							</figure>
-							<a href="#" class="signup-image-link">Create an account</a>
+							<a href="/pages/register" class="signup-image-link"
+								>Create an account</a
+							>
 						</div>
 
 						<div class="signin-form">
-							<h2 class="form-title">Sign up</h2>
+							<h2 class="form-title">Sign In</h2>
 							<form method="POST" class="register-form" id="login-form">
 								<div class="form-group">
-									<label for="your_name"
-										><i class="zmdi zmdi-account material-icons-name"></i
-									></label>
+									<label for="email"><i class="zmdi zmdi-email"></i></label>
 									<input
-										type="text"
-										name="your_name"
-										id="your_name"
-										placeholder="Your Name"
+										type="email"
+										name="email"
+										id="email"
+										placeholder="Your Email"
+										required
 									/>
 								</div>
 								<div class="form-group">
-									<label for="your_pass"><i class="zmdi zmdi-lock"></i></label>
+									<label for="pass"><i class="zmdi zmdi-lock"></i></label>
 									<input
 										type="password"
-										name="your_pass"
-										id="your_pass"
+										name="pass"
+										id="pass"
 										placeholder="Password"
+										maxlength="12"
+										minlength="5"
+										required
 									/>
 								</div>
-								<div class="form-group">
+								<!-- <div class="form-group">
 									<input
 										type="checkbox"
 										name="remember-me"
@@ -75,7 +79,7 @@
 									<label for="remember-me" class="label-agree-term"
 										><span><span></span></span>Remember me</label
 									>
-								</div>
+								</div> -->
 								<div class="form-group form-button">
 									<input
 										type="submit"
@@ -114,5 +118,52 @@
 
 		<!-- JS -->
 		<script src="/blog_home_assests/js/jquery.min.js"></script>
+		<%- include('./partials/footer'); -%>
+		<script>
+			var btn = document.getElementById("signin");
+			var form = document.getElementById("login-form");
+
+			form.addEventListener("submit", handleSubmit);
+
+			function setloading(bool = false) {
+				let text = "";
+				let isdisabled = false;
+				if (bool) {
+					text = "Loading...";
+					isdisabled = true;
+				} else {
+					text = "Login";
+					isdisabled = false;
+				}
+
+				btn.value = text;
+				btn.disabled = true;
+			}
+
+			async function handleSubmit(e) {
+				e.preventDefault();
+				try {
+					setloading(true);
+
+					const email = e.currentTarget.email.value.trim();
+					const pass = e.currentTarget.pass.value.trim();
+
+					await axios.post(`${window.BASE_URL_API}readers/login`, {
+						email,
+						password: pass,
+					});
+
+					window.location.href = window.BASE_URL;
+				} catch (error) {
+					if (error.response) {
+						alert(error.response.data.message);
+					} else {
+						alert("Something went wrong!");
+					}
+				} finally {
+					setloading(false);
+				}
+			}
+		</script>
 	</body>
 </html>

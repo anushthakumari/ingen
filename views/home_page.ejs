@@ -76,9 +76,15 @@
 					<!-- Begin Menu -->
 					<ul class="navbar-nav ml-auto">
 						<li class="nav-item active">
-							<a class="nav-link" href="/"
+							<% if(user_name){ %>
+							<a class="nav-link" href="/">
+								<%= user_name %> <span class="sr-only">(current)</span></a
+							>
+							<% } else{ %>
+							<a class="nav-link" href="/pages/login"
 								>Login <span class="sr-only">(current)</span></a
 							>
+							<% } %>
 						</li>
 						<!-- <li class="nav-item">
 							<a class="nav-link" href="post.html">Post</a>
@@ -378,19 +384,6 @@
 			</section>
 			<!-- End List Posts
 	================================================== -->
-
-			<!-- Begin Footer
-	================================================== -->
-			<div class="footer">
-				<p class="pull-left">Copyright &copy; House Of Couton</p>
-				<!-- <p class="pull-right">
-					Mediumish Theme by
-					<a target="_blank" href="https://www.y.net">y.net</a>
-				</p> -->
-				<div class="clearfix"></div>
-			</div>
-			<!-- End Footer
-	================================================== -->
 		</div>
 		<!-- /.container -->
 
@@ -405,5 +398,7 @@
 		></script>
 		<script src="/blog_home_assests/js/bootstrap.min.js"></script>
 		<script src="/blog_home_assests/js/ie10-viewport-bug-workaround.js"></script>
+
+		<%- include('./partials/footer'); -%>
 	</body>
 </html>

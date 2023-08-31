@@ -1,9 +1,9 @@
 const jwt = require("jsonwebtoken");
 const ErrorResponse = require("../utils/ErrorResponse");
 
-module.exports.generateToken = ({ id, email, role }) => {
+module.exports.generateToken = ({ id, email, role, name }) => {
 	const privateKey = process.env.TOKEN_KEY;
-	return jwt.sign({ id, email, role }, privateKey, { expiresIn: "6h" });
+	return jwt.sign({ id, email, role, name }, privateKey, { expiresIn: "6h" });
 };
 
 module.exports.verifyToken = (token) => {

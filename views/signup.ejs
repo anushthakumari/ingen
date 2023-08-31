@@ -34,7 +34,7 @@
 					<div class="signup-content">
 						<div class="signup-form">
 							<h2 class="form-title">Sign up</h2>
-							<form method="POST" class="register-form" id="register-form">
+							<form method="post" class="register-form" id="register-form">
 								<div class="form-group">
 									<label for="name"
 										><i class="zmdi zmdi-account material-icons-name"></i
@@ -44,6 +44,7 @@
 										name="name"
 										id="name"
 										placeholder="Your Name"
+										required
 									/>
 								</div>
 								<div class="form-group">
@@ -53,6 +54,7 @@
 										name="email"
 										id="email"
 										placeholder="Your Email"
+										required
 									/>
 								</div>
 								<div class="form-group">
@@ -62,6 +64,9 @@
 										name="pass"
 										id="pass"
 										placeholder="Password"
+										maxlength="12"
+										minlength="5"
+										required
 									/>
 								</div>
 								<div class="form-group">
@@ -72,10 +77,13 @@
 										type="password"
 										name="re_pass"
 										id="re_pass"
+										maxlength="12"
+										minlength="5"
 										placeholder="Repeat your password"
+										required
 									/>
 								</div>
-								<div class="form-group">
+								<!-- <div class="form-group">
 									<input
 										type="checkbox"
 										name="agree-term"
@@ -86,12 +94,32 @@
 										><span><span></span></span>I agree all statements in
 										<a href="#" class="term-service">Terms of service</a></label
 									>
+								</div> -->
+								<div class="social-login">
+									<span class="social-label">Or Sign Up With</span>
+									<ul class="socials">
+										<li>
+											<a href="#"
+												><i class="display-flex-center zmdi zmdi-facebook"></i
+											></a>
+										</li>
+										<li>
+											<a href="#"
+												><i class="display-flex-center zmdi zmdi-twitter"></i
+											></a>
+										</li>
+										<li>
+											<a href="#"
+												><i class="display-flex-center zmdi zmdi-google"></i
+											></a>
+										</li>
+									</ul>
 								</div>
 								<div class="form-group form-button">
 									<input
 										type="submit"
 										name="signup"
-										id="signup"
+										id="signup-btn"
 										class="form-submit"
 										value="Register"
 									/>
@@ -105,7 +133,9 @@
 									alt="sing up image"
 								/>
 							</figure>
-							<a href="#" class="signup-image-link">I am already member</a>
+							<a href="/pages/login" class="signup-image-link"
+								>I am already member</a
+							>
 						</div>
 					</div>
 				</div>
@@ -114,5 +144,66 @@
 
 		<!-- JS -->
 		<script src="/blog_home_assests/js/jquery.min.js"></script>
+		<%- include('./partials/footer'); -%>
+		<script>
+			var btn = document.getElementById("signup-btn");
+			var form = document.getElementById("register-form");
+
+			form.addEventListener("submit", handleSubmit);
+
+			function setloading(bool = false) {
+				let text = "";
+				let isdisabled = false;
+				if (bool) {
+					text = "Loading...";
+					isdisabled = true;
+				} else {
+					text = "Register";
+					isdisabled = false;
+				}
+
+				btn.value = text;
+				btn.disabled = true;
+			}
+
+			async function handleSubmit(e) {
+				e.preventDefault();
+				try {
+					setloading(true);
+
+					const name = e.currentTarget.name.value.trim();
+					const email = e.currentTarget.email.value.trim();
+					const pass = e.currentTarget.pass.value.trim();
+					const re_pass = e.currentTarget.re_pass.value.trim();
+
+					if (!/^([a-zA-Z'-.]+(?: [a-zA-Z'-.]+)?)$/.test(name)) {
+						alert("Invalid name!");
+						setloading(false);
+						return;
+					}
+
+					if (pass !== re_pass) {
+						alert("Passwords must match!");
+						setloading(false);
+						return;
+					}
+
+					await axios.post(`${window.BASE_URL_API}readers/register`, {
+						name,
+						email,
+						pass,
+					});
+					window.location.href = window.BASE_URL;
+				} catch (error) {
+					if (error.response) {
+						alert(error.response.data.message);
+					} else {
+						alert("Something went wrong!");
+					}
+				} finally {
+					setloading(false);
+				}
+			}
+		</script>
 	</body>
 </html>

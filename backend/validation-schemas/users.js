@@ -11,3 +11,11 @@ module.exports.register_user = () =>
 			pass: Joi.string().required().trim().max(10),
 		}),
 	});
+
+module.exports.login_user = () =>
+	celebrate({
+		[Segments.BODY]: Joi.object().keys({
+			email: Joi.string().email().trim().required().max(180),
+			password: Joi.string().required().trim().max(12),
+		}),
+	});

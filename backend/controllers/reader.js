@@ -1,72 +1,115 @@
+const bcrypt = require("bcrypt");
+
 const asyncHandler = require("../utils/asyncHandler");
 const pool = require("../libs/pool");
 const { generateToken } = require("../libs/jwt");
 
+const TABLE_NAME = "readers";
+
+const saltRounds = 10;
+
 exports.login = asyncHandler(async (req, res, next) => {
-	// const { email, password } = req.body;
+	if (req.method === "POST") {
+		if (req.session.token) {
+			res.status(200).send({
+				message: "Already Logged in!",
+			});
+			return;
+		}
 
-	// const { rows, rowCount } = await pool.query({
-	// 	text: `SELECT * FROM users where email=$1`,
-	// 	values: [email],
-	// });
+		const { email, password } = req.body;
 
-	// if (!rowCount) {
-	// 	res.status(401).send({ message: "Invalid credentials" });
-	// 	return;
-	// }
+		const { rows, rowCount } = await pool.query({
+			text: `SELECT * FROM ${TABLE_NAME} where email=$1`,
+			values: [email],
+		});
 
-	// if (rows[0].password !== password) {
-	// 	res.status(401).send({ message: "Invalid credentials" });
-	// 	return;
-	// }
+		if (!rowCount) {
+			res.status(401).send({ message: "Invalid credentials" });
+			return;
+		}
 
-	// const token = generateToken({
-	// 	id: rows[0].id,
-	// 	email: rows[0].email,
-	// 	role: rows[0].role,
-	// });
+		const hash = rows[0].pass;
 
-	// res.send({
-	// 	message: "Login successfull",
-	// 	token,
-	// 	role: rows[0].role,
-	// });
+		const isvalidpass = await bcrypt.compare(password, hash);
+
+		if (!isvalidpass) {
+			res.status(401).send({ message: "Invalid credentials" });
+			return;
+		}
+
+		const token = generateToken({
+			id: rows[0].id,
+			email: rows[0].email,
+			name: rows[0].name,
+		});
+
+		req.session.token = token;
+
+		res.send({
+			message: "Login successfull",
+		});
+
+		return;
+	}
+
+	if (req.session.token) {
+		res.redirect("/");
+		return;
+	}
 
 	res.render("signin");
 });
 
 exports.register = asyncHandler(async (req, res, next) => {
-	const { email, pass, name } = req.body;
-	const role = "editor";
+	if (req.method === "POST") {
+		if (req.session.token) {
+			res.status(200).send({
+				message: "Already Logged in!",
+			});
+			return;
+		}
 
-	// const { rowCount } = await pool.query({
-	// 	text: `SELECT * FROM users where email=$1`,
-	// 	values: [email],
-	// });
+		const { email, pass, name } = req.body;
 
-	// if (rowCount) {
-	// 	res.status(400).send({
-	// 		message: "User with this email already exists!",
-	// 	});
-	// 	return;
-	// }
+		const { rowCount } = await pool.query({
+			text: `SELECT * FROM ${TABLE_NAME} where email=$1`,
+			values: [email],
+		});
 
-	// const { rows: inRows } = await pool.query({
-	// 	text: `INSERT INTO users(name, email, password, role) VALUES($1, $2, $3, $4) RETURNING id`,
-	// 	values: [name, email, pass, role],
-	// });
+		if (rowCount) {
+			res.status(400).send({
+				message: "User with this email already exists!",
+			});
+			return;
+		}
 
-	// const token = generateToken({
-	// 	id: inRows[0].id,
-	// 	email,
-	// 	role,
-	// });
+		const salt = await bcrypt.genSalt(saltRounds);
+		const hash = await bcrypt.hash(pass, salt);
 
-	// res.send({
-	// 	message: "Login successfull",
-	// 	token,
-	// 	role,
-	// });
+		const { rows } = await pool.query({
+			text: `INSERT INTO ${TABLE_NAME}(name, email, pass) VALUES($1, $2, $3) RETURNING id`,
+			values: [name, email, hash],
+		});
 
+		const token = generateToken({
+			id: rows[0].id,
+			email,
+			name,
+		});
+
+		req.session.token = token;
+
+		res.send({
+			message: "Login successfull",
+		});
+
+		return;
+	}
+
+	if (req.session.token) {
+		res.redirect("/");
+		return;
+	}
 	res.render("signup");
 });

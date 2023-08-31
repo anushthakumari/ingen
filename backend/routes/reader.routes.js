@@ -5,7 +5,7 @@ const validation_schemas = require("../validation-schemas/users");
 
 const router = express.Router();
 
-router.route("/login").post(login);
+router.route("/login").post(validation_schemas.login_user(), login);
 router.route("/register").post(validation_schemas.register_user(), register);
 
 module.exports = router;

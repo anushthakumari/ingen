@@ -334,6 +334,7 @@ exports.getHome = asyncHandler(async (req, res, next) => {
 		title: "InGenral - Everything You Seek!",
 		description: "We Write All Types Of Blogs",
 		site_name: "InGenral",
+		user_name: req.userData?.name,
 		featured: rows.map((v) => ({
 			...v,
 			desc: v.desc.slice(0, 70),

@@ -8,6 +8,7 @@ import Login from "./pages/Login";
 import Blogs from "./pages/Blogs";
 import Editor from "./pages/Editor";
 import Categories from "./pages/Categories";
+import TextSum from "./pages/TextSum";
 
 import BlogsListContext from "./context/BlogList.context";
 
@@ -22,6 +23,7 @@ export default function App() {
 				<BlogsListContext>
 					<PrivateRoute exact path={"/creator"} Comp={Blogs} />
 					<PrivateRoute exact path={"/creator/categories"} Comp={Categories} />
+					<PrivateRoute exact path={"/creator/textsum"} Comp={TextSum} />
 					<PrivateRoute path={"/creator/blog/edit/:id"} Comp={Editor} />
 				</BlogsListContext>
 			</Switch>

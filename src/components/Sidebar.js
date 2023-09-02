@@ -19,6 +19,10 @@ const routes = [
 		title: "Categories",
 		path: "/creator/categories",
 	},
+	{
+		title: "Text Summurizer",
+		path: "/creator/textsum",
+	},
 ];
 
 export default function Sidebar() {

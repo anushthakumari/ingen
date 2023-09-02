@@ -15,6 +15,7 @@ import Modal from "@mui/material/Modal";
 import FileUploadField from "./FileUpload.Field";
 import { useBlogList } from "../../context/BlogList.context";
 import configs from "../../configs";
+import axios from "axios";
 
 const Paragraph = ({
 	fieldsStructure,
@@ -171,6 +172,36 @@ const Paragraph = ({
 		settagState({ is_search_start: false, text_data: "" });
 	};
 
+	const sumtext = async (index) => {
+		try {
+			const text = fieldsStructure[index]["para"];
+			if (!text?.trim()) {
+				alert("please enter text in paragraph");
+				return;
+			}
+
+			setloading(true);
+			const fd = new FormData();
+			fd.append("text", text);
+			const { data } = await axios.post(
+				"https://www.ingenral.com/text-sum",
+				fd
+			);
+
+			setfieldsStructure((prev) => {
+				const i = index;
+				let newFormValues = [...prev];
+				newFormValues[i]["para"] = data.text;
+				return newFormValues;
+			});
+		} catch (error) {
+			console.log(error);
+			alert("Something went wrong!!");
+		} finally {
+			setloading(false);
+		}
+	};
+
 	// const handleCrossClick = (structureIndex) => {
 	// 	setfieldsStructure((curr) => curr.filter((e, i) => i !== structureIndex));
 	// };
@@ -294,8 +325,13 @@ const Paragraph = ({
 							</Box>
 						) : null}
 
-						<Button onClick={() => setextLinkModal({ isOpen: true, index })}>
+						<Button
+							variant="outlined"
+							onClick={() => setextLinkModal({ isOpen: true, index })}>
 							Add External Link
+						</Button>
+						<Button variant="outlined" onClick={() => sumtext(index)}>
+							Summurize above text
 						</Button>
 					</Box>
 				</div>

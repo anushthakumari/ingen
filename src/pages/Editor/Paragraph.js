@@ -188,12 +188,14 @@ const Paragraph = ({
 				fd
 			);
 
-			setfieldsStructure((prev) => {
-				const i = index;
-				let newFormValues = [...prev];
-				newFormValues[i]["para"] = data.text;
-				return newFormValues;
-			});
+			if (data.text) {
+				setfieldsStructure((prev) => {
+					const i = index;
+					let newFormValues = [...prev];
+					newFormValues[i]["para"] = data.text;
+					return newFormValues;
+				});
+			}
 		} catch (error) {
 			console.log(error);
 			alert("Something went wrong!!");

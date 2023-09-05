@@ -325,9 +325,11 @@ exports.toggleBlogPublish = asyncHandler(async (req, res, next) => {
 exports.getHome = asyncHandler(async (req, res, next) => {
 	let q = `SELECT blogs.title, blogs.desc, blogs.header_image, blogs.blog_created_time, blogs.blog_update_time, blogs.slug, categories.category, categories.slug as cat_slug FROM blogs left join categories on blogs.category_id=categories.id where is_published=true order by blog_id desc limit 4;`;
 	let q2 = `SELECT blogs.title, blogs.desc, blogs.header_image, blogs.blog_created_time, blogs.blog_update_time, blogs.slug, categories.category, categories.slug as cat_slug FROM blogs left join categories on blogs.category_id=categories.id where is_published=true`;
+	let newsq = `SELECT blogs.title, blogs.desc, blogs.header_image, blogs.blog_created_time, blogs.blog_update_time, blogs.slug, categories.category, categories.slug as cat_slug FROM blogs inner join categories on blogs.category_id=categories.id where is_published=true and categories.slug=$1`;
 
 	const { rows } = await pool.query(q);
 	const stories = await pool.query(q2);
+	const news = await pool.query({ text: newsq, values: ["news"] });
 
 	const context = {
 		url: "",
@@ -336,6 +338,19 @@ exports.getHome = asyncHandler(async (req, res, next) => {
 		site_name: "InGenral",
 		user_name: req.userData?.name,
 		featured: rows.map((v) => ({
+			...v,
+			desc: v.desc.slice(0, 70),
+			blog_update_date: v.blog_update_time
+				? moment(v.blog_update_time).format("MMMM Do YYYY")
+				: undefined,
+			blog_date: moment(v.blog_created_time).format("MMMM Do YYYY"),
+			blog_update_date_iso: v.blog_update_time
+				? moment(v.blog_update_time).toISOString()
+				: undefined,
+			link: `${process.env.BASE_URL}pages/articles/${v.cat_slug}/${v.slug}`,
+		})),
+
+		news: news.rows.map((v) => ({
 			...v,
 			desc: v.desc.slice(0, 70),
 			blog_update_date: v.blog_update_time

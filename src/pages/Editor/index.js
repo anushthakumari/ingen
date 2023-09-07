@@ -43,8 +43,6 @@ const Editor = (props) => {
 	const validationSchema = Yup.object({
 		title: Yup.string().required("Required!"),
 		desc: Yup.string().required("Required!"),
-		btn_1_text: Yup.string().max(25),
-		btn_2_text: Yup.string().max(25),
 	});
 
 	const fetchBlogData = () => {

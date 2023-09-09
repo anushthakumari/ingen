@@ -22,15 +22,11 @@ const Paragraph = ({
 	setfieldsStructure,
 	setloading,
 	initialValues,
+	setextLinkModal,
 }) => {
 	const { rows } = useBlogList();
 
 	const [search_result, setsearch_result] = useState([]);
-	const [extLinkModal, setextLinkModal] = useState({
-		isOpen: false,
-		index: -1,
-	});
-
 	const [tagState, settagState] = useState({
 		is_search_start: false,
 		text_data: "",
@@ -97,26 +93,6 @@ const Paragraph = ({
 		setfieldsStructure(newFormValues);
 	};
 
-	let handleExtSubmit = (e) => {
-		e.stopPropagation();
-		e.preventDefault();
-		const caption = e.currentTarget.caption.value.trim();
-		const link = e.currentTarget.link.value.trim();
-
-		const anchor_text = "@" + caption;
-		const anchor_url = link;
-		const anchor_tag = `<a href="${anchor_url}" target="_blank" >${anchor_text}</a>`;
-
-		setfieldsStructure((prev) => {
-			const i = extLinkModal.index;
-			let newFormValues = [...prev];
-			newFormValues[i]["para"] = newFormValues[i]["para"] + " " + anchor_tag;
-			return newFormValues;
-		});
-
-		setextLinkModal({ isOpen: false, index: 0 });
-	};
-
 	let handleTagItemClick = (data = {}) => {
 		let newFormValues = [...fieldsStructure];
 
@@ -170,6 +146,19 @@ const Paragraph = ({
 
 	const closeTags = () => {
 		settagState({ is_search_start: false, text_data: "" });
+	};
+
+	const handleRightClick = (index, key, e) => {
+		e.preventDefault();
+
+		const selectedText = getSelectedText().toString();
+
+		if (!selectedText) {
+			return;
+		}
+
+		// console.log(selectedText);
+		setextLinkModal({ isOpen: true, index, selectedText, key });
 	};
 
 	const sumtext = async (index) => {
@@ -275,9 +264,11 @@ const Paragraph = ({
 							variant="outlined"
 							label={"Para Title (h2)"}
 							name={"para_title"}
+							value={fieldsStructure[index].para_title}
 							defaultValue={fieldsStructure[index].para_title}
 							onChange={handleChange.bind(this, index)}
 							InputLabelProps={{ shrink: true }}
+							onContextMenu={handleRightClick.bind(this, index, "para_title")}
 							fullWidth
 							multiline
 						/>
@@ -292,6 +283,7 @@ const Paragraph = ({
 							onChange={handleChange.bind(this, index)}
 							InputLabelProps={{ shrink: true }}
 							onKeyDown={(e) => handleKeyDown(e, index)}
+							onContextMenu={handleRightClick.bind(this, index, "para")}
 							fullWidth
 							multiline
 						/>
@@ -327,11 +319,11 @@ const Paragraph = ({
 							</Box>
 						) : null}
 
-						<Button
+						{/* <Button
 							variant="outlined"
 							onClick={() => setextLinkModal({ isOpen: true, index })}>
 							Add External Link
-						</Button>
+						</Button> */}
 						<Button variant="outlined" onClick={() => sumtext(index)}>
 							Summurize above text
 						</Button>
@@ -346,37 +338,6 @@ const Paragraph = ({
 				onClick={handleADDclick}>
 				ADD MORE PARAGRAPH
 			</Button>
-
-			<Modal
-				open={extLinkModal.isOpen}
-				onClose={() => setextLinkModal({ isOpen: false, index: 0 })}
-				aria-labelledby="modal-modal-title"
-				aria-describedby="modal-modal-description">
-				<Box component={"form"} onSubmit={handleExtSubmit} sx={style}>
-					<Typography> Add External Link</Typography>
-					<Box m={1} pt={3}>
-						<TextField
-							name="caption"
-							label="Link Caption"
-							type="text"
-							fullWidth
-							required
-						/>
-					</Box>
-					<Box m={1} pt={3}>
-						<TextField
-							name="link"
-							type="url"
-							label="Complete Url"
-							required
-							fullWidth
-						/>
-					</Box>
-					<Button fullWidth type="submit">
-						Submit
-					</Button>
-				</Box>
-			</Modal>
 		</div>
 	);
 };
@@ -401,3 +362,15 @@ var alphabets = (() => {
 })();
 
 var allowed_keys_for_tags = [...alphabets, "_", "@", " ", "Backspace", "Enter"];
+
+function getSelectedText() {
+	let txt;
+	if (window.getSelection) {
+		txt = window.getSelection();
+	} else if (window.document.getSelection) {
+		txt = window.document.getSelection();
+	} else if (window.document.selection) {
+		txt = window.document.selection.createRange().text;
+	}
+	return txt;
+}

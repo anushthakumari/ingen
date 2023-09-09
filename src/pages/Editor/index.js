@@ -98,6 +98,7 @@ const Editor = (props) => {
 		<BlogPageContainer>
 			<BackdropLoader open={loading} />
 			<EditBog
+				setinitialValues={setinitialValues}
 				initialValues={initialValues}
 				validationSchema={validationSchema}
 				onSubmitHandler={onSubmitHandler}

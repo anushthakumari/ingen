@@ -9,8 +9,9 @@ import {
 	Select,
 	MenuItem,
 	InputLabel,
+	Modal,
 } from "@mui/material";
-import { Formik, Form, Field, ErrorMessage } from "formik";
+import { Formik, Form, Field, ErrorMessage, useFormik } from "formik";
 
 import BubbleButon from "./Bubbles";
 import FileUploadField from "./FileUpload.Field";
@@ -29,8 +30,15 @@ const EditBog = ({
 	fieldsStructure,
 	setfieldsStructure,
 	setloading,
+	setinitialValues,
 }) => {
 	const [isLoading, setisLoading] = useState(false);
+	const [extLinkModal, setextLinkModal] = useState({
+		isOpen: false,
+		index: -1,
+		selectedText: "",
+		key: "",
+	});
 	const [is_published, setis_published] = useState(initialValues.is_published);
 	const role = localStorage.getItem(localtoragekeys.role);
 
@@ -55,17 +63,80 @@ const EditBog = ({
 		}
 	};
 
+	const handleRightClick = (key, e) => {
+		e.preventDefault();
+
+		const selectedText = getSelectedText().toString();
+
+		if (!selectedText) {
+			return;
+		}
+
+		// console.log(selectedText);
+		setextLinkModal({ isOpen: true, index: -1, selectedText, key });
+	};
+
+	let handleExtSubmit = (e) => {
+		e.stopPropagation();
+		e.preventDefault();
+		const caption = extLinkModal.selectedText;
+		const link = e.currentTarget.link.value.trim();
+
+		const anchor_text = "@" + caption;
+		const anchor_url = link;
+		const anchor_tag = `<a href="${anchor_url}" target="_blank" >${anchor_text}</a>`;
+
+		const i = extLinkModal.index;
+		const key = extLinkModal.key;
+
+		if (i > -1) {
+			setfieldsStructure((prev) => {
+				let newFormValues = [...prev];
+				newFormValues[i][key] = newFormValues[i][key].replace(
+					caption,
+					anchor_tag
+				); //+ " " + anchor_tag;
+				return newFormValues;
+			});
+		} else {
+			setinitialValues((prev) => {
+				const vals = { ...prev };
+				vals[key] = vals[key].replace(caption, anchor_tag);
+				return vals;
+			});
+		}
+
+		setextLinkModal({ isOpen: false, index: 0 });
+	};
+
+	const handleSubmit = (e) => {
+		e.preventDefault();
+		onSubmitHandler({
+			h1: initialValues.h1,
+			h2: initialValues.h2,
+			title: initialValues.title,
+			desc: initialValues.desc,
+			category_id: initialValues.category_id,
+		});
+	};
+
+	const handleChange = (e) => {
+		const key = e.target.name;
+		const value = e.target.value;
+		setinitialValues((prev) => {
+			const vals = { ...prev };
+			vals[key] = value;
+			return vals;
+		});
+	};
+
 	useEffect(() => {
 		setis_published(initialValues.is_published);
 	}, [initialValues.is_published]);
 
 	return (
-		<Formik
-			initialValues={initialValues}
-			validationSchema={validationSchema}
-			onSubmit={onSubmitHandler}
-			enableReinitialize>
-			<Form>
+		<div>
+			<form onSubmit={handleSubmit}>
 				<BackdropLoader open={isLoading} />
 				{role === "admin" ? (
 					<Box
@@ -96,131 +167,84 @@ const EditBog = ({
 					)}
 				/>
 
-				{/* Title */}
+				{/* category */}
 				{initialValues.category_id ? (
-					<Field as="select" name="category_id">
-						{(props) => {
-							let { field } = props;
-							return (
-								<Box m={1} pt={3}>
-									<InputLabel id="category">Category</InputLabel>
-									<Select
-										labelId="category"
-										id="category-select"
-										label="Category"
-										required
-										defaultValue={initialValues.category_id}
-										sx={{ minWidth: "300px" }}
-										{...field}>
-										{initialValues.cat_rows?.map((v, i) => (
-											<MenuItem key={i} value={v.id}>
-												{v.category}
-											</MenuItem>
-										))}
-									</Select>
-								</Box>
-							);
-						}}
-					</Field>
+					<Box m={1} pt={3}>
+						<InputLabel id="category">Category</InputLabel>
+						<Select
+							labelId="category"
+							id="category-select"
+							label="Category"
+							required
+							name="category_id"
+							defaultValue={initialValues.category_id}
+							onChange={handleChange}
+							value={initialValues.category_id}
+							sx={{ minWidth: "300px" }}>
+							{initialValues.cat_rows?.map((v, i) => (
+								<MenuItem key={i} value={v.id}>
+									{v.category}
+								</MenuItem>
+							))}
+						</Select>
+					</Box>
 				) : null}
 
 				{/* Title */}
-				<Field type="text" name="title">
-					{(props) => {
-						let { field } = props;
-						return (
-							<Box m={1} pt={3}>
-								<TextField
-									variant="outlined"
-									label={"Title"}
-									fullWidth
-									required
-									{...field}
-								/>
-							</Box>
-						);
-					}}
-				</Field>
-				<ErrorMessage name="title">
-					{(errMsg) => (
-						<Typography color="primary" variant="body2">
-							{errMsg}
-						</Typography>
-					)}
-				</ErrorMessage>
+
+				<Box m={1} pt={3}>
+					<TextField
+						variant="outlined"
+						label={"Title"}
+						type="text"
+						name="title"
+						value={initialValues.title}
+						onChange={handleChange}
+						fullWidth
+						required
+					/>
+				</Box>
 
 				{/* Description */}
 
-				<Field type="text" name="desc">
-					{(props) => {
-						let { field } = props;
-						return (
-							<Box m={1} pt={3}>
-								<TextField
-									variant="outlined"
-									label={"Description"}
-									fullWidth
-									required
-									multiline
-									{...field}
-								/>
-							</Box>
-						);
-					}}
-				</Field>
-				<ErrorMessage name="desc">
-					{(errMsg) => (
-						<Typography color="primary" variant="body2">
-							{errMsg}
-						</Typography>
-					)}
-				</ErrorMessage>
+				<Box m={1} pt={3}>
+					<TextField
+						variant="outlined"
+						label={"Description"}
+						type="text"
+						name="desc"
+						value={initialValues.desc}
+						onChange={handleChange}
+						fullWidth
+						required
+						multiline
+					/>
+				</Box>
 				{/* HEADING H1 TEXT */}
-				<Field type="number" name="h1">
-					{(props) => {
-						let { field } = props;
-						return (
-							<Box m={1} pt={3}>
-								<TextField
-									variant="outlined"
-									label={"Heading H1 Text"}
-									fullWidth
-									{...field}
-								/>
-							</Box>
-						);
-					}}
-				</Field>
-				<ErrorMessage name="h1">
-					{(errMsg) => (
-						<Typography color="primary" variant="body2">
-							{errMsg}
-						</Typography>
-					)}
-				</ErrorMessage>
+
+				<Box m={1} pt={3}>
+					<TextField
+						variant="outlined"
+						label={"Heading H1 Text"}
+						fullWidth
+						name="h1"
+						value={initialValues.h1}
+						onChange={handleChange}
+						onContextMenu={handleRightClick.bind(this, "h1")}
+					/>
+				</Box>
 				{/* HEADING H2 TEXT */}
-				<Field type="number" name="h2">
-					{(props) => {
-						let { field } = props;
-						return (
-							<Box m={1} pt={3}>
-								<TextField
-									variant="outlined"
-									label={"Heading H2 Text"}
-									fullWidth
-									{...field}
-								/>
-							</Box>
-						);
-					}}
-				</Field>
-				<ErrorMessage name="h2">
-					{(errMsg) => (
-						<Typography color="primary" variant="body2">
-							{errMsg}
-						</Typography>
-					)}
-				</ErrorMessage>
+				<Box m={1} pt={3}>
+					<TextField
+						variant="outlined"
+						label={"Heading H2 Text"}
+						fullWidth
+						name="h2"
+						value={initialValues.h2}
+						onChange={handleChange}
+						onContextMenu={handleRightClick.bind(this, "h2")}
+					/>
+				</Box>
 
 				<Divider style={{ margin: "20px 0" }} />
 
@@ -231,6 +255,7 @@ const EditBog = ({
 					setfieldsStructure={setfieldsStructure}
 					setloading={setloading}
 					initialValues={initialValues}
+					setextLinkModal={setextLinkModal}
 				/>
 
 				<Divider style={{ margin: "20px 0" }} />
@@ -392,9 +417,55 @@ const EditBog = ({
 					type="submit"
 					fullWidth
 				/>
-			</Form>
-		</Formik>
+			</form>
+
+			<Modal
+				open={extLinkModal.isOpen}
+				onClose={() => setextLinkModal({ isOpen: false, index: 0 })}
+				aria-labelledby="modal-modal-title"
+				aria-describedby="modal-modal-description">
+				<Box component={"form"} onSubmit={handleExtSubmit} sx={style}>
+					<Typography> Add External Link</Typography>
+					<Box m={1} pt={3}>
+						<TextField
+							name="link"
+							type="url"
+							label="Complete Url"
+							required
+							fullWidth
+						/>
+					</Box>
+					<Button fullWidth type="submit">
+						Submit
+					</Button>
+				</Box>
+			</Modal>
+		</div>
 	);
 };
 
 export default EditBog;
+
+function getSelectedText() {
+	let txt;
+	if (window.getSelection) {
+		txt = window.getSelection();
+	} else if (window.document.getSelection) {
+		txt = window.document.getSelection();
+	} else if (window.document.selection) {
+		txt = window.document.selection.createRange().text;
+	}
+	return txt;
+}
+
+var style = {
+	position: "absolute",
+	top: "50%",
+	left: "50%",
+	transform: "translate(-50%, -50%)",
+	width: 400,
+	bgcolor: "background.paper",
+	border: "2px solid #000",
+	boxShadow: 24,
+	p: 4,
+};

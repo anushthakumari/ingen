@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<%- include('../partials/common_header'); -%>
+
+		<meta charset="utf-8" />
+		<title>Sign Up | InGenral</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+		<!-- MATERIAL DESIGN ICONIC FONT -->
+		<link rel="stylesheet" href="/css/material-design-iconic-font.min.css" />
+
+		<!-- STYLE CSS -->
+		<link rel="stylesheet" href="/css/creator_login.css" />
+		<link rel="stylesheet" href="/css/blogStyles.css" />
+
+		<!-- Quicksand Font -->
+		<link
+			href="https://fonts.googleapis.com/css?family=Montserrat:600|Poppins:500|Quicksand:500,700|Raleway&amp;display=swap"
+			rel="stylesheet"
+		/>
+	</head>
+
+	<body>
+		<%- include('../partials/nav'); -%>
+		<div
+			class="wrapper"
+			style="background-image: url('/public_images/bg-registration-form-1.jpg')"
+		>
+			<div class="inner">
+				<div class="image-holder">
+					<img
+						src="/public_images/registration-form-1.jpg"
+						alt="background-image"
+					/>
+				</div>
+				<form id="form" method="post" action="">
+					<h3>Registration Form</h3>
+					<div>
+						<span
+							id="f_name_err"
+							style="color: red"
+							aria-live="assertive"
+						></span>
+						<span
+							id="l_name_err"
+							style="color: red; margin-left: 40px"
+							aria-live="assertive"
+						></span>
+					</div>
+					<div class="form-group">
+						<input
+							type="text"
+							name="f_name"
+							placeholder="First Name"
+							class="form-control"
+							minlength="3"
+							maxlength="40"
+							pattern="[a-zA-Z]+"
+							aria-label="First Name"
+							aria-required="true"
+							aria-invalid="false"
+							aria-errormessage="f_name_err"
+							required
+						/>
+
+						<input
+							type="text"
+							name="l_name"
+							placeholder="Last Name"
+							class="form-control"
+							minlength="3"
+							maxlength="40"
+							pattern="[a-zA-Z]+"
+							aria-label="Last Name"
+							aria-required="true"
+							aria-invalid="false"
+							aria-errormessage="l_name_err"
+							required
+						/>
+					</div>
+
+					<div class="form-wrapper">
+						<input
+							type="text"
+							name="org_name"
+							placeholder="Organisation Name"
+							class="form-control"
+							minlength="3"
+							maxlength="40"
+							aria-label="Organisation Name"
+							aria-required="true"
+							aria-invalid="false"
+							aria-errormessage="org_name_err"
+							required
+						/>
+						<span id="org_name_err" aria-live="assertive"></span>
+					</div>
+					<div class="form-wrapper">
+						<input
+							type="email"
+							name="email"
+							class="form-control"
+							placeholder="Email Address"
+							aria-label="Email"
+							aria-required="true"
+							aria-invalid="false"
+							aria-errormessage="email_err"
+							required
+						/>
+						<span id="email_err" aria-live="assertive"></span>
+					</div>
+					<div class="form-wrapper">
+						<input
+							type="tel"
+							name="phone"
+							placeholder="Phone Number"
+							class="form-control"
+							aria-label="Phone Number"
+							pattern=".{10}"
+							aria-required="true"
+							aria-invalid="false"
+							aria-errormessage="phone_err"
+							required
+						/>
+
+						<span id="phone_err" aria-live="assertive"></span>
+					</div>
+					<div class="form-wrapper">
+						<select
+							name="gender"
+							aria-label="Gender"
+							class="form-control"
+							required
+							aria-required="true"
+						>
+							<option value="">Gender</option>
+							<option value="male">Male</option>
+							<option value="female">Female</option>
+							<option value="other">Other</option>
+						</select>
+					</div>
+					<div class="form-wrapper">
+						<select
+							name="cat_id"
+							aria-label="Category"
+							class="form-control"
+							required
+							aria-required="true"
+						>
+							<option value="">Domain Of Writing</option>
+							<% cats.forEach(function(cat, i){ %>
+							<option value="<%= cat.id %>"><%= cat.category %></option>
+							<% }); %>
+						</select>
+					</div>
+					<div class="form-wrapper">
+						<input
+							type="password"
+							name="pass"
+							placeholder="Password"
+							class="form-control"
+							minlength="6"
+							maxlength="12"
+							aria-label="Password"
+							aria-required="true"
+							aria-invalid="false"
+							aria-errormessage="pass_err"
+							required
+						/>
+						<span id="pass_err" aria-live="assertive"></span>
+					</div>
+					<div class="form-wrapper">
+						<input
+							type="password"
+							name="c_pass"
+							placeholder="Confirm Password"
+							class="form-control"
+							minlength="6"
+							maxlength="12"
+							aria-label="Confirm Password"
+							aria-invalid="false"
+							aria-errormessage="c_pass_err"
+							aria-required="true"
+							required
+						/>
+						<span id="c_pass_err" aria-live="assertive"></span>
+					</div>
+					<button id="submit-btn" type="submit">Register</button>
+				</form>
+			</div>
+		</div>
+		<%- include('../partials/footer'); -%>
+		<script>
+			const formEle = document.getElementById("form");
+			const inputs = document.querySelectorAll("input");
+			const btn = document.getElementById("submit-btn");
+
+			inputs.forEach((e) => {
+				e.addEventListener("input", validateInputs);
+				e.addEventListener("blur", validateInputs);
+			});
+
+			formEle.addEventListener("submit", formSubmitHandler);
+
+			//handlers
+			async function formSubmitHandler(e) {
+				e.preventDefault();
+				const errElement = document.getElementById("c_pass_err");
+
+				const fd = new FormData(e.target);
+
+				const pass = e.target.pass.value.trim();
+				const c_pass = e.target.c_pass.value.trim();
+
+				if (pass !== c_pass) {
+					errElement.textContent = "Passwords do not match!";
+					return;
+				}
+
+				errElement.textContent = "";
+
+				setloading(true);
+
+				const data = {};
+
+				for (const [key, value] of fd) {
+					data[key] = value;
+				}
+
+				try {
+					await axios.post(window.location.href, data);
+					alert("Welcome!!");
+					window.location.href = "/";
+				} catch (error) {
+					if (error.response) {
+						alert(error.response.data.message);
+					} else {
+						alert("Something went wrong!");
+					}
+				} finally {
+					setloading(false);
+				}
+			}
+
+			function setloading(bool = false) {
+				let text = "";
+				let isdisabled = false;
+				if (bool) {
+					text = "Loading...";
+					isdisabled = true;
+				} else {
+					text = "Register";
+					isdisabled = false;
+				}
+
+				btn.value = text;
+				btn.disabled = true;
+			}
+
+			function validateInputs(e) {
+				const validityState = this.validity;
+				const errElement = document.getElementById(this.name + "_err");
+				const ariaLabel = this.getAttribute("aria-label");
+
+				const getMsg = () => {
+					let message = "";
+					if (validityState.typeMismatch) {
+						message = "Invalid " + ariaLabel + "tt!";
+					}
+
+					if (validityState.valueMissing) {
+						message = ariaLabel + " is required!";
+					}
+
+					if (!validityState.valid) {
+						message = "Invalid " + ariaLabel + "!";
+					}
+
+					if (validityState.tooShort) {
+						message = "This is too short!";
+					}
+
+					if (validityState.tooLong) {
+						message = "This is too long!";
+					}
+
+					return message;
+				};
+
+				const message = getMsg();
+
+				errElement.textContent = message;
+
+				if (message) {
+					this.setAttribute("aria-invalid", "true");
+				} else {
+					this.setAttribute("aria-invalid", "false");
+				}
+			}
+		</script>
+	</body>
+</html>

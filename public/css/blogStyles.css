@@ -40,6 +40,7 @@ nav {
 	width: 170px;
 	display: flex;
 	justify-content: space-between;
+	align-items: center;
 }
 
 .logo-ctn h1 {

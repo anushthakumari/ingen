@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<%- include('../partials/common_header'); -%>
+
+		<meta charset="utf-8" />
+		<title>Sign In | InGenral</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+		<!-- MATERIAL DESIGN ICONIC FONT -->
+		<link rel="stylesheet" href="/css/material-design-iconic-font.min.css" />
+
+		<!-- STYLE CSS -->
+		<link rel="stylesheet" href="/css/creator_login.css" />
+		<link rel="stylesheet" href="/css/blogStyles.css" />
+
+		<!-- Quicksand Font -->
+		<link
+			href="https://fonts.googleapis.com/css?family=Montserrat:600|Poppins:500|Quicksand:500,700|Raleway&amp;display=swap"
+			rel="stylesheet"
+		/>
+	</head>
+
+	<body>
+		<%- include('../partials/nav'); -%>
+		<div
+			class="wrapper"
+			style="background-image: url('/public_images/bg-registration-form-1.jpg')"
+		>
+			<div class="inner">
+				<div class="image-holder">
+					<img
+						src="/public_images/registration-form-1.jpg"
+						alt="background-image"
+					/>
+				</div>
+				<form id="form" method="post" action="">
+					<h3>Welcome Back!</h3>
+
+					<div class="form-wrapper">
+						<input
+							type="email"
+							name="email"
+							class="form-control"
+							placeholder="Email Address"
+							aria-label="Email"
+							aria-required="true"
+							aria-invalid="false"
+							aria-errormessage="email_err"
+							required
+						/>
+						<span id="email_err" aria-live="assertive"></span>
+					</div>
+
+					<div class="form-wrapper">
+						<input
+							type="password"
+							name="pass"
+							placeholder="Password"
+							class="form-control"
+							minlength="6"
+							maxlength="12"
+							aria-label="Password"
+							aria-required="true"
+							aria-invalid="false"
+							aria-errormessage="pass_err"
+							required
+						/>
+						<span id="pass_err" aria-live="assertive"></span>
+					</div>
+					<button id="submit-btn" type="submit">Login</button>
+				</form>
+			</div>
+		</div>
+		<%- include('../partials/footer'); -%>
+		<script>
+			const formEle = document.getElementById("form");
+			const inputs = document.querySelectorAll("input");
+			const btn = document.getElementById("submit-btn");
+
+			inputs.forEach((e) => {
+				e.addEventListener("input", validateInputs);
+				e.addEventListener("blur", validateInputs);
+			});
+
+			formEle.addEventListener("submit", formSubmitHandler);
+
+			//handlers
+			async function formSubmitHandler(e) {
+				e.preventDefault();
+
+				const fd = new FormData(e.target);
+
+				setloading(true);
+
+				const data = {};
+
+				for (const [key, value] of fd) {
+					data[key] = value;
+				}
+
+				try {
+					await axios.post(window.location.href, data);
+					alert("Welcome!!");
+					window.location.href = "/";
+				} catch (error) {
+					if (error.response) {
+						alert(error.response.data.message);
+					} else {
+						alert("Something went wrong!");
+					}
+				} finally {
+					setloading(false);
+				}
+			}
+
+			function setloading(bool = false) {
+				let text = "";
+				let isdisabled = false;
+				if (bool) {
+					text = "Loading...";
+					isdisabled = true;
+				} else {
+					text = "Login";
+					isdisabled = false;
+				}
+
+				btn.value = text;
+				btn.disabled = true;
+			}
+
+			function validateInputs(e) {
+				const validityState = this.validity;
+				const errElement = document.getElementById(this.name + "_err");
+				const ariaLabel = this.getAttribute("aria-label");
+
+				const getMsg = () => {
+					let message = "";
+					if (validityState.typeMismatch) {
+						message = "Invalid " + ariaLabel + "tt!";
+					}
+
+					if (validityState.valueMissing) {
+						message = ariaLabel + " is required!";
+					}
+
+					if (!validityState.valid) {
+						message = "Invalid " + ariaLabel + "!";
+					}
+
+					if (validityState.tooShort) {
+						message = "This is too short!";
+					}
+
+					if (validityState.tooLong) {
+						message = "This is too long!";
+					}
+
+					return message;
+				};
+
+				const message = getMsg();
+
+				errElement.textContent = message;
+
+				if (message) {
+					this.setAttribute("aria-invalid", "true");
+				} else {
+					this.setAttribute("aria-invalid", "false");
+				}
+			}
+		</script>
+	</body>
+</html>

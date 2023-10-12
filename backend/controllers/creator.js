@@ -6,6 +6,7 @@ const asyncHandler = require("../utils/asyncHandler");
 const ErrorResponse = require("../utils/ErrorResponse");
 const pool = require("../libs/pool");
 const { generateToken } = require("../libs/jwt");
+const googleAuth = require("../libs/googleAuth");
 const cat_services = require("../services/categories.services");
 
 const TABLE_NAME = "creators";
@@ -142,4 +143,36 @@ exports.login_page = asyncHandler(async (req, res, next) => {
 	}
 
 	res.render("creators/signin");
+});
+
+exports.google_login = asyncHandler(async (req, res, next) => {
+	const google_creds_str = req.body.credential;
+
+	const { email } = await googleAuth.verify(google_creds_str);
+
+	const { rows, rowCount } = await pool.query({
+		text: `SELECT * FROM ${TABLE_NAME} where email=$1`,
+		values: [email],
+	});
+
+	if (!rowCount) {
+		const conetxt = {
+			message: "User with this email doesn't exist!, Please register yourself!",
+			btn_message: "Go to Register",
+			btn_url: process.env.BASE_URL + "pages/creator/signup",
+		};
+		res.render("error_page", conetxt);
+		return;
+	}
+
+	const token = generateToken({
+		id: rows[0].id,
+		email: rows[0].email,
+		name: rows[0].f_name,
+		role: "creator",
+	});
+
+	req.session.token = token;
+
+	res.redirect("/");
 });

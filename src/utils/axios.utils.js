@@ -11,6 +11,8 @@ axiosHelper.defaults.headers = {
 	Accept: "application/json",
 };
 
+axiosHelper.defaults.withCredentials = true;
+
 export default axiosHelper;
 
 export function getRequest(URL, config) {

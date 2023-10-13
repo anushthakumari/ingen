@@ -7,10 +7,13 @@ const cookieParser = require("cookie-parser");
 const sessions = require("express-session");
 
 const errorHandler = require("./backend/middlewares/errorHandler.middleware");
-const sessionTokenParser = require("./backend/middlewares/readerTokenParser.middleware");
+const { verifyToken } = require("./backend/libs/jwt");
+const sessionTokenParser = require("./backend/middlewares/tokenParser.middleware");
 const apiRoutes = require("./backend/routes");
 const staticroutes = require("./backend/routes/staticroutes");
 const { getHome } = require("./backend/controllers/blogs");
+
+const allowed_roles = ["editor", "admin"];
 
 const app = express();
 require("dotenv").config();
@@ -46,6 +49,22 @@ app.use("/", async (req, res, next) => {
 	const filepath = path.join(__dirname, "build", filename);
 
 	if (filename.startsWith("/creator")) {
+		const token = req.session.token;
+		if (!token) {
+			res.redirect("/pages/creator/signin");
+			return;
+		}
+
+		let decoded = verifyToken(token);
+
+		if (!allowed_roles.includes(decoded.role)) {
+			res.redirect("/pages/creator/signin");
+			return;
+		}
+
+		res.cookie("role", decoded.role, {
+			httpOnly: false,
+		});
 		return res.sendFile(path.join(__dirname, "build", "index.html"));
 	}
 

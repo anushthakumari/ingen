@@ -11,7 +11,18 @@ export function getToken() {
 }
 
 export function getRole() {
-	return localStorage.getItem(localtoragekeys.role);
+	const visibleCookie = document.cookie
+		.split(";")
+		.find(
+			(cookie) => cookie.startsWith(" role=") || cookie.startsWith("role=")
+		);
+
+	if (visibleCookie) {
+		const cookieValue = visibleCookie.split("=")[1];
+		return cookieValue;
+	} else {
+		return "editor";
+	}
 }
 
 export function logout() {

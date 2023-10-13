@@ -68,7 +68,7 @@ exports.sign_up_page = asyncHandler(async (req, res, next) => {
 			id: rows[0].id,
 			email: body.email,
 			name: body.f_name,
-			role: "creator",
+			role: "editor",
 		});
 
 		req.session.token = token;
@@ -78,7 +78,7 @@ exports.sign_up_page = asyncHandler(async (req, res, next) => {
 		});
 	} else {
 		if (req.session.token) {
-			res.redirect("/");
+			res.redirect("/creator");
 			return;
 		}
 
@@ -125,7 +125,7 @@ exports.login_page = asyncHandler(async (req, res, next) => {
 			id: rows[0].id,
 			email: rows[0].email,
 			name: rows[0].f_name,
-			role: "creator",
+			role: rows[0].role,
 		});
 
 		req.session.token = token;
@@ -138,7 +138,7 @@ exports.login_page = asyncHandler(async (req, res, next) => {
 	}
 
 	if (req.session.token) {
-		res.redirect("/");
+		res.redirect("/creator");
 		return;
 	}
 
@@ -169,10 +169,10 @@ exports.google_login = asyncHandler(async (req, res, next) => {
 		id: rows[0].id,
 		email: rows[0].email,
 		name: rows[0].f_name,
-		role: "creator",
+		role: rows[0].role,
 	});
 
 	req.session.token = token;
 
-	res.redirect("/");
+	res.redirect("/creator");
 });

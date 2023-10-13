@@ -1,10 +1,8 @@
 import React from "react";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 
-import PrivateRoute from "./components/PrivateRoute";
 import Sidebar from "./components/Sidebar";
 
-import Login from "./pages/Login";
 import Blogs from "./pages/Blogs";
 import Editor from "./pages/Editor";
 import Categories from "./pages/Categories";
@@ -17,14 +15,14 @@ export default function App() {
 		<Router>
 			<Sidebar />
 			<Switch>
-				<Route path={"/creator/login"}>
+				{/* <Route path={"/creator/login"}>
 					<Login />
-				</Route>
+				</Route> */}
 				<BlogsListContext>
-					<PrivateRoute exact path={"/creator"} Comp={Blogs} />
-					<PrivateRoute exact path={"/creator/categories"} Comp={Categories} />
-					<PrivateRoute exact path={"/creator/textsum"} Comp={TextSum} />
-					<PrivateRoute path={"/creator/blog/edit/:id"} Comp={Editor} />
+					<Route exact path={"/creator"} component={Blogs} />
+					<Route exact path={"/creator/categories"} component={Categories} />
+					<Route exact path={"/creator/textsum"} component={TextSum} />
+					<Route path={"/creator/blog/edit/:id"} component={Editor} />
 				</BlogsListContext>
 			</Switch>
 		</Router>

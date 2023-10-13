@@ -42,6 +42,7 @@ exports.login = asyncHandler(async (req, res, next) => {
 			id: rows[0].id,
 			email: rows[0].email,
 			name: rows[0].name,
+			role: "reader",
 		});
 
 		req.session.token = token;
@@ -96,6 +97,7 @@ exports.register = asyncHandler(async (req, res, next) => {
 			id: rows[0].id,
 			email,
 			name,
+			role: "reader",
 		});
 
 		req.session.token = token;

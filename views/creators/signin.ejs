@@ -141,7 +141,7 @@
 				try {
 					await axios.post(window.location.href, data);
 					alert("Welcome!!");
-					window.location.href = "/";
+					window.location.href = "/creator";
 				} catch (error) {
 					if (error.response) {
 						alert(error.response.data.message);

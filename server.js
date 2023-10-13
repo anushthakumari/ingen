@@ -27,7 +27,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(
 	sessions({
 		secret: process.env.TOKEN_KEY,
-		saveUninitialized: true,
+		saveUninitialized: false,
 		cookie: {
 			maxAge: 1000 * 60 * 60 * 168, //a week
 			secure: process.env.ENV === "prod",

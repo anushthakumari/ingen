@@ -139,7 +139,9 @@
 				}
 
 				try {
-					await axios.post(window.location.href, data);
+					await axios.post(window.location.href, data, {
+						withCredentials: true,
+					});
 					alert("Welcome!!");
 					window.location.href = "/creator";
 				} catch (error) {

@@ -5,6 +5,7 @@ const bodyParser = require("body-parser");
 const fs = require("fs");
 const cookieParser = require("cookie-parser");
 const sessions = require("express-session");
+const MongoDBStore = require("connect-mongodb-session");
 
 const errorHandler = require("./backend/middlewares/errorHandler.middleware");
 const { verifyToken } = require("./backend/libs/jwt");
@@ -20,19 +21,35 @@ require("dotenv").config();
 
 app.set("view engine", "ejs");
 
-app.use(cors());
+const mongoStore = MongoDBStore(sessions);
+
+const store = new mongoStore({
+	collection: "userSessions",
+	uri: process.env.mongoURI,
+	expires: 1000,
+});
+
+app.use(
+	cors({
+		credentials: true,
+	})
+);
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use(
 	sessions({
 		secret: process.env.TOKEN_KEY,
+		name: "SESS_NAME",
+		store: store,
 		saveUninitialized: false,
-		cookie: {
-			maxAge: 1000 * 60 * 60 * 168, //a week
-			secure: process.env.ENV === "prod",
-		},
 		resave: false,
+		cookie: {
+			sameSite: false,
+			secure: process.env.NODE_ENV === "production",
+			maxAge: 1000,
+			httpOnly: true,
+		},
 	})
 );
 

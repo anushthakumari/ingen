@@ -23,10 +23,12 @@ app.set("view engine", "ejs");
 
 const mongoStore = MongoDBStore(sessions);
 
+const cookieexp = 1000 * 60 * 60 * 168; //a week
+
 const store = new mongoStore({
 	collection: "userSessions",
 	uri: process.env.mongoURI,
-	expires: 1000,
+	expires: cookieexp,
 });
 
 app.use(
@@ -47,7 +49,7 @@ app.use(
 		cookie: {
 			sameSite: false,
 			secure: process.env.NODE_ENV === "production",
-			maxAge: 1000,
+			maxAge: cookieexp,
 			httpOnly: true,
 		},
 	})

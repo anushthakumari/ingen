@@ -81,6 +81,20 @@
 					</div>
 
 					<div class="form-wrapper">
+						<select
+							name="creator_type"
+							id="creator_type"
+							aria-label="Creator Type"
+							class="form-control"
+							required
+							aria-required="true"
+						>
+							<option value="organisation">Organisation</option>
+							<option value="individual">Individual</option>
+						</select>
+					</div>
+
+					<div class="form-wrapper" id="org_name_container">
 						<input
 							type="text"
 							name="org_name"
@@ -96,6 +110,7 @@
 						/>
 						<span id="org_name_err" aria-live="assertive"></span>
 					</div>
+
 					<div class="form-wrapper">
 						<input
 							type="email"
@@ -202,17 +217,64 @@
 		<%- include('../partials/footer'); -%>
 		<script>
 			const formEle = document.getElementById("form");
-			const inputs = document.querySelectorAll("input");
 			const btn = document.getElementById("submit-btn");
+			const creator_type_select_ele = document.getElementById("creator_type");
+			const org_name_container_ele =
+				document.getElementById("org_name_container");
 
-			inputs.forEach((e) => {
-				e.addEventListener("input", validateInputs);
-				e.addEventListener("blur", validateInputs);
-			});
+			addInputListeners();
+
+			creator_type_select_ele.addEventListener(
+				"change",
+				creator_type_select_handler
+			);
 
 			formEle.addEventListener("submit", formSubmitHandler);
 
 			//handlers
+			function creator_type_select_handler(e) {
+				const value = e.target.value;
+				const input_html = `<input
+							type="text"
+							name="org_name"
+							placeholder="Organisation Name"
+							class="form-control"
+							minlength="3"
+							maxlength="40"
+							aria-label="Organisation Name"
+							aria-required="true"
+							aria-invalid="false"
+							aria-errormessage="org_name_err"
+							required
+						/>
+						<span id="org_name_err" aria-live="assertive"></span>`;
+
+				if (value === "organisation") {
+					org_name_container_ele.innerHTML = input_html;
+				} else {
+					org_name_container_ele.innerHTML = "";
+				}
+
+				removeInputListeners();
+				addInputListeners();
+			}
+
+			function addInputListeners() {
+				const inputs = document.querySelectorAll("input");
+				inputs.forEach((e) => {
+					e.addEventListener("input", validateInputs);
+					e.addEventListener("blur", validateInputs);
+				});
+			}
+
+			function removeInputListeners() {
+				const inputs = document.querySelectorAll("input");
+				inputs.forEach((e) => {
+					e.removeEventListener("input", validateInputs);
+					e.removeEventListener("blur", validateInputs);
+				});
+			}
+
 			async function formSubmitHandler(e) {
 				e.preventDefault();
 				const errElement = document.getElementById("c_pass_err");

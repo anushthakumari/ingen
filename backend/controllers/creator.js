@@ -49,16 +49,17 @@ exports.sign_up_page = asyncHandler(async (req, res, next) => {
 		const hash = await bcrypt.hash(body.pass, salt);
 
 		const { rows } = await pool.query({
-			text: `INSERT INTO ${TABLE_NAME}(f_name, l_name, org_name, cat_id, email, phone, gender, pass) VALUES($1, $2, $3, $4, $5, $6, $7, $8) RETURNING id`,
+			text: `INSERT INTO ${TABLE_NAME}(f_name, l_name, org_name, cat_id, email, phone, gender, pass, creator_type) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING id`,
 			values: [
 				body.f_name.trim(),
 				body.l_name.trim(),
-				body.org_name.trim(),
+				body.org_name?.trim() || null,
 				parseInt(body.cat_id),
 				body.email.trim(),
 				body.phone.trim(),
 				body.gender.trim(),
 				hash,
+				body.creator_type.trim(),
 			],
 		});
 

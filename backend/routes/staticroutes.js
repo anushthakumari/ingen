@@ -7,6 +7,7 @@ const {
 	sign_up_page,
 	google_login,
 } = require("../controllers/creator");
+const validation_schemas = require("../validation-schemas/creator");
 
 const router = express.Router();
 
@@ -15,7 +16,10 @@ router.route("/articles/:category/:slug").get(fetchPreviewBlog);
 router.route("/register").get(register);
 router.route("/login").get(login);
 router.route("/logout").get(log_out);
-router.route("/creator/signup").get(sign_up_page).post(sign_up_page);
+router
+	.route("/creator/signup")
+	.get(sign_up_page)
+	.post(validation_schemas.register_user(), sign_up_page);
 router.route("/creator/signin").get(login_page).post(login_page);
 router.route("/creator/google-signin").get(google_login).post(google_login);
 router.route("/sitemap").get(getBlogSiteMap);

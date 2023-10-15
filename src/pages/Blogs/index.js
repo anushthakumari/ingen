@@ -54,7 +54,7 @@ const BlogList = () => {
 	const handleLogOut = () => {
 		logout();
 		window.location.href =
-			process.env.REACT_APP_BASE_URL +
+			process.env.REACT_APP_SERVER_BASE_URL +
 			"/pages/logout?redirect=pages/creator/signin";
 	};
 

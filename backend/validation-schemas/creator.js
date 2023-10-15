@@ -22,3 +22,21 @@ module.exports.register_user = () =>
 			creator_type: Joi.string().required().valid(ORG, IND),
 		}),
 	});
+
+module.exports.update_profile = () =>
+	celebrate({
+		[Segments.BODY]: Joi.object().keys({
+			f_name: Joi.string()
+				.trim()
+				.required()
+				.regex(/[a-zA-Z][a-zA-Z ]+[a-zA-Z]$/),
+			l_name: Joi.string()
+				.trim()
+				.required()
+				.regex(/[a-zA-Z][a-zA-Z ]+[a-zA-Z]$/),
+			org_name: Joi.string().allow(null, ""),
+			cat_id: Joi.number().required(),
+			gender: Joi.string().required(),
+			creator_type: Joi.string().required().valid(ORG, IND),
+		}),
+	});

@@ -20,6 +20,10 @@ const routes = [
 		path: "/creator/categories",
 	},
 	{
+		title: "Profile",
+		path: "/creator/profile",
+	},
+	{
 		title: "Text Summurizer",
 		path: "/creator/textsum",
 	},

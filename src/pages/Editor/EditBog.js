@@ -40,7 +40,7 @@ const EditBog = ({
 		key: "",
 	});
 	const [is_published, setis_published] = useState(initialValues.is_published);
-	const role = localStorage.getItem(localtoragekeys.role);
+	// const role = localStorage.getItem(localtoragekeys.role);
 
 	const handleSwithcChange = async (e) => {
 		try {
@@ -138,20 +138,20 @@ const EditBog = ({
 		<div>
 			<form onSubmit={handleSubmit}>
 				<BackdropLoader open={isLoading} />
-				{role === "admin" ? (
-					<Box
-						sx={{
-							width: "100%",
-							display: "flex",
-							justifyContent: "space-between",
-							alignItems: "center",
-						}}>
-						<Typography variant="h4">Edit Blog</Typography>
-						<Button variant="contained" onClick={handleSwithcChange}>
-							{is_published ? "unpublish" : "publish"}
-						</Button>
-					</Box>
-				) : null}
+				{/* {role === "admin" ? ( */}
+				<Box
+					sx={{
+						width: "100%",
+						display: "flex",
+						justifyContent: "space-between",
+						alignItems: "center",
+					}}>
+					<Typography variant="h4">Edit Blog</Typography>
+					<Button variant="contained" onClick={handleSwithcChange}>
+						{is_published ? "unpublish" : "publish"}
+					</Button>
+				</Box>
+				{/* ) : null} */}
 
 				{/* SEO header image */}
 

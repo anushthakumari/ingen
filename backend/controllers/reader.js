@@ -3,6 +3,7 @@ const bcrypt = require("bcrypt");
 const asyncHandler = require("../utils/asyncHandler");
 const pool = require("../libs/pool");
 const { generateToken } = require("../libs/jwt");
+const { READER } = require("../constants/roles");
 
 const TABLE_NAME = "readers";
 
@@ -42,7 +43,7 @@ exports.login = asyncHandler(async (req, res, next) => {
 			id: rows[0].id,
 			email: rows[0].email,
 			name: rows[0].name,
-			role: "reader",
+			role: READER,
 		});
 
 		req.session.token = token;
@@ -97,7 +98,7 @@ exports.register = asyncHandler(async (req, res, next) => {
 			id: rows[0].id,
 			email,
 			name,
-			role: "reader",
+			role: READER,
 		});
 
 		req.session.token = token;

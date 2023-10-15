@@ -1,7 +1,8 @@
+const { EDITOR } = require("../constants/roles");
 const asyncHandler = require("../utils/asyncHandler");
 const ErrorResponse = require("../utils/ErrorResponse");
 
-module.exports = (role = "editor") =>
+module.exports = (role = EDITOR) =>
 	asyncHandler((req, res, next) => {
 		if (!req.userData) {
 			return next(

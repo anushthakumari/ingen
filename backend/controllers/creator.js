@@ -1,13 +1,11 @@
-const slugify = require("slugify");
-const moment = require("moment");
 const bcrypt = require("bcrypt");
 
 const asyncHandler = require("../utils/asyncHandler");
-const ErrorResponse = require("../utils/ErrorResponse");
 const pool = require("../libs/pool");
 const { generateToken } = require("../libs/jwt");
 const googleAuth = require("../libs/googleAuth");
 const cat_services = require("../services/categories.services");
+const { EDITOR } = require("../constants/roles");
 
 const TABLE_NAME = "creators";
 const saltRounds = 10;
@@ -68,7 +66,7 @@ exports.sign_up_page = asyncHandler(async (req, res, next) => {
 			id: rows[0].id,
 			email: body.email,
 			name: body.f_name,
-			role: "editor",
+			role: EDITOR,
 		});
 
 		req.session.token = token;

@@ -1,6 +1,7 @@
 const asyncHandler = require("../utils/asyncHandler");
 const pool = require("../libs/pool");
 const { generateToken } = require("../libs/jwt");
+const { EDITOR } = require("../constants/roles");
 
 exports.login = asyncHandler(async (req, res, next) => {
 	const { email, password } = req.body;
@@ -35,7 +36,7 @@ exports.login = asyncHandler(async (req, res, next) => {
 
 exports.register = asyncHandler(async (req, res, next) => {
 	const { email, pass, name } = req.body;
-	const role = "editor";
+	const role = EDITOR;
 
 	const { rowCount } = await pool.query({
 		text: `SELECT * FROM users where email=$1`,

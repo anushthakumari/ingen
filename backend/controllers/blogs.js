@@ -23,8 +23,6 @@ exports.getAllBlogs = asyncHandler(async (req, res, next) => {
 		q.values = [creator_id];
 	}
 
-	console.log(req.userData.id);
-
 	const { rowCount, rows } = await pool.query(q);
 
 	res.send({ message: "Fetched Successfully!", data: rows, total: rowCount });

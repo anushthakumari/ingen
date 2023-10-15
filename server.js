@@ -5,6 +5,7 @@ const bodyParser = require("body-parser");
 const fs = require("fs");
 const cookieParser = require("cookie-parser");
 const sessions = require("express-session");
+const pgconnect = require("connect-pg-simple");
 
 const errorHandler = require("./backend/middlewares/errorHandler.middleware");
 const { verifyToken } = require("./backend/libs/jwt");
@@ -12,12 +13,13 @@ const sessionTokenParser = require("./backend/middlewares/tokenParser.middleware
 const apiRoutes = require("./backend/routes");
 const staticroutes = require("./backend/routes/staticroutes");
 const { getHome } = require("./backend/controllers/blogs");
+const pool = require("./backend/libs/pool");
 
 require("dotenv").config();
 
 const allowed_roles = ["editor", "admin"];
-
 const cookieexp = parseInt(process.env.TOKEN_EXP_MSEC); //a week
+const PGSessionStore = pgconnect(sessions);
 
 let whitelist;
 
@@ -48,6 +50,10 @@ app.use(
 	sessions({
 		secret: process.env.TOKEN_KEY,
 		name: "sess_ing",
+		store: new PGSessionStore({
+			pool: pool,
+			tableName: "session",
+		}),
 		saveUninitialized: false,
 		resave: false,
 		cookie: {

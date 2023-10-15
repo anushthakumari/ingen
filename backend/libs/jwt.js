@@ -3,7 +3,8 @@ const ErrorResponse = require("../utils/ErrorResponse");
 
 module.exports.generateToken = ({ id, email, role, name }) => {
 	const privateKey = process.env.TOKEN_KEY;
-	return jwt.sign({ id, email, role, name }, privateKey, { expiresIn: "6h" });
+	const expiresIn = parseInt(process.env.TOKEN_EXP_MSEC);
+	return jwt.sign({ id, email, role, name }, privateKey, { expiresIn });
 };
 
 module.exports.verifyToken = (token) => {

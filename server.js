@@ -14,22 +14,21 @@ const apiRoutes = require("./backend/routes");
 const staticroutes = require("./backend/routes/staticroutes");
 const { getHome } = require("./backend/controllers/blogs");
 
-const allowed_roles = ["editor", "admin"];
-
-const app = express();
 require("dotenv").config();
 
-app.set("view engine", "ejs");
+const allowed_roles = ["editor", "admin"];
 
 const mongoStore = MongoDBStore(sessions);
-
-const cookieexp = 1000 * 60 * 60 * 168; //a week
-
+const cookieexp = parseInt(process.env.TOKEN_EXP_MSEC); //a week
 const store = new mongoStore({
 	collection: "userSessions",
 	uri: process.env.mongoURI,
 	expires: cookieexp,
 });
+
+const app = express();
+
+app.set("view engine", "ejs");
 
 app.use(
 	cors({
@@ -42,7 +41,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(
 	sessions({
 		secret: process.env.TOKEN_KEY,
-		name: "SESS_NAME",
+		name: "sess_ing",
 		store: store,
 		saveUninitialized: false,
 		resave: false,

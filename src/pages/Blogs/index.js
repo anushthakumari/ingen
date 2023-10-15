@@ -53,7 +53,7 @@ const BlogList = () => {
 
 	const handleLogOut = () => {
 		logout();
-		browserHistory.push("/creator/login");
+		window.location.href = "/pages/logout?redirect=pages/creator/signin";
 	};
 
 	useEffect(() => {

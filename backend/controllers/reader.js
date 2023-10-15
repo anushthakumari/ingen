@@ -115,3 +115,9 @@ exports.register = asyncHandler(async (req, res, next) => {
 	}
 	res.render("signup");
 });
+
+exports.log_out = asyncHandler(async (req, res) => {
+	const redirect_path = req.params.redirect || "";
+	req.session.destroy();
+	res.redirect("/" + redirect_path);
+});

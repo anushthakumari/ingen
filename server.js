@@ -40,7 +40,7 @@ app.use(
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-if (process.env.NODE_ENV === "production0") {
+if (process.env.NODE_ENV === "production") {
 	app.set("trust proxy", 1);
 }
 
@@ -51,7 +51,7 @@ app.use(
 		saveUninitialized: false,
 		resave: false,
 		cookie: {
-			sameSite: process.env.NODE_ENV === "production" ? "none" : false,
+			sameSite: process.env.NODE_ENV === "production",
 			secure: process.env.NODE_ENV === "production",
 			maxAge: cookieexp,
 		},

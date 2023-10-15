@@ -5,39 +5,60 @@ const asyncHandler = require("../utils/asyncHandler");
 const ErrorResponse = require("../utils/ErrorResponse");
 const pool = require("../libs/pool");
 const cat_services = require("../services/categories.services");
+const blogPersmission = require("../middlewares/blogPermission.middleware");
+const { EDITOR } = require("../constants/roles");
 
 exports.getAllBlogs = asyncHandler(async (req, res, next) => {
-	let q = `SELECT blogs.*, categories.category, categories.slug as cat_slug FROM blogs left join categories on blogs.category_id=categories.id order by blog_id desc;`;
+	//query for admin
+	const q = {
+		text: `SELECT blogs.*, categories.category, categories.slug as cat_slug FROM blogs left join categories on blogs.category_id=categories.id order by blog_id desc;`,
+		values: [],
+	};
+
+	//query for editor
+	if (req.userData.role === EDITOR) {
+		const creator_id = req.userData.id;
+
+		q.text = `SELECT blogs.*, categories.category, categories.slug as cat_slug FROM blogs left join categories on blogs.category_id=categories.id where created_by=$1 order by blog_id desc;`;
+		q.values = [creator_id];
+	}
+
+	console.log(req.userData.id);
 
 	const { rowCount, rows } = await pool.query(q);
 
 	res.send({ message: "Fetched Successfully!", data: rows, total: rowCount });
 });
 
-exports.deleteBlog = asyncHandler(async (req, res, next) => {
-	const { id } = req.params;
+exports.deleteBlog = [
+	blogPersmission,
+	asyncHandler(async (req, res, next) => {
+		const { id } = req.params;
 
-	//delete sets
-	let q = "DELETE FROM blog_sets WHERE blog_id=" + id;
-	await pool.query(q);
+		//delete sets
+		let q = "DELETE FROM blog_sets WHERE blog_id=" + id;
+		await pool.query(q);
 
-	//delete blog
-	q = "DELETE FROM blogs WHERE blog_id=" + id;
-	await pool.query(q);
+		//delete blog
+		q = "DELETE FROM blogs WHERE blog_id=" + id;
+		await pool.query(q);
 
-	res.send({ message: "Data Deleted Successfully", data: { blog_id: id } });
-});
+		res.send({ message: "Data Deleted Successfully", data: { blog_id: id } });
+	}),
+];
 
 exports.createBlog = asyncHandler(async (req, res, next) => {
 	const { title, desc } = req.body;
+	const { id } = req.userData;
+
 	const slug = slugify(title, {
 		lower: true,
 	});
 	const header_image = "media/default.jpg";
 
 	//query
-	let q = `INSERT INTO blogs ("title", "desc", "slug", "header_image") VALUES ($1, $2, $3, $4) RETURNING blog_id`;
-	let values = [title, desc, slug, header_image];
+	let q = `INSERT INTO blogs ("title", "desc", "slug", "header_image", "created_by") VALUES ($1, $2, $3, $4, $5) RETURNING blog_id`;
+	let values = [title, desc, slug, header_image, id];
 	const { rows } = await pool.query({ text: q, values });
 
 	res.status(201).send({ blog_id: rows[0].blog_id, message: "Blog Created!" });
@@ -76,32 +97,32 @@ exports.getSingleRawBlog = asyncHandler(async (req, res, next) => {
 	res.send({ message: "Fetched Successfully!", data });
 });
 
-exports.updateBlog = asyncHandler(async (req, res, next) => {
-	const { id } = req.params;
+exports.updateBlog = [
+	blogPersmission,
+	asyncHandler(async (req, res, next) => {
+		const { id } = req.params;
 
-	const {
-		header_image,
-		title,
-		desc,
-		h1,
-		h2,
-		bottom_bar_h3,
-		bottom_bar_h5,
-		sets,
-		btn_1_text,
-		btn_1_url,
-		btn_2_text,
-		btn_2_url,
-		category_id,
-	} = req.body;
+		const {
+			header_image,
+			title,
+			desc,
+			h1,
+			h2,
+			bottom_bar_h3,
+			bottom_bar_h5,
+			sets,
+			btn_1_text,
+			btn_1_url,
+			btn_2_text,
+			btn_2_url,
+			category_id,
+		} = req.body;
 
-	console.log({ category_id });
+		const slug = slugify(title, {
+			lower: true,
+		});
 
-	const slug = slugify(title, {
-		lower: true,
-	});
-
-	let q = `UPDATE blogs SET 
+		let q = `UPDATE blogs SET 
 					title=$1,
 					header_image=$2,
 					h2=$3,
@@ -119,47 +140,47 @@ exports.updateBlog = asyncHandler(async (req, res, next) => {
 				WHERE
 					blog_id=$14
 			`;
-	let values = [
-		title,
-		header_image,
-		h2,
-		h1,
-		desc,
-		bottom_bar_h5,
-		bottom_bar_h3,
-		btn_1_text,
-		btn_1_url,
-		btn_2_text,
-		btn_2_url,
-		slug,
-		category_id,
-		id,
-	];
+		let values = [
+			title,
+			header_image,
+			h2,
+			h1,
+			desc,
+			bottom_bar_h5,
+			bottom_bar_h3,
+			btn_1_text,
+			btn_1_url,
+			btn_2_text,
+			btn_2_url,
+			slug,
+			category_id,
+			id,
+		];
 
-	await pool.query({ text: q, values });
+		await pool.query({ text: q, values });
 
-	if (sets.length) {
-		for (let i = 0; i < sets.length; i++) {
-			const setData = sets[i];
+		if (sets.length) {
+			for (let i = 0; i < sets.length; i++) {
+				const setData = sets[i];
 
-			//if not set id then insert
-			if (!setData.set_id) {
-				q = `INSERT INTO blog_sets 
+				//if not set id then insert
+				if (!setData.set_id) {
+					q = `INSERT INTO blog_sets 
 				("para_title", "para", "single_image", "slide_image", "carousel", "blog_id") 
 				VALUES ($1, $2, $3, $4, $5, $6)`;
 
-				values = [
-					setData.para_title,
-					setData.para,
-					setData.single_image,
-					setData.slide_image,
-					setData.carousel,
-					id,
-				];
+					values = [
+						setData.para_title,
+						setData.para,
+						setData.single_image,
+						setData.slide_image,
+						setData.carousel,
+						id,
+					];
 
-				await pool.query({ text: q, values });
-			} else {
-				q = `UPDATE blog_sets SET 
+					await pool.query({ text: q, values });
+				} else {
+					q = `UPDATE blog_sets SET 
 					para_title=$1,
 					para=$2,
 					single_image=$3,
@@ -168,23 +189,23 @@ exports.updateBlog = asyncHandler(async (req, res, next) => {
 				WHERE
 					set_id=$6
 			`;
-				values = [
-					setData.para_title,
-					setData.para,
-					setData.single_image,
-					setData.slide_image,
-					setData.carousel,
-					setData.set_id,
-				];
+					values = [
+						setData.para_title,
+						setData.para,
+						setData.single_image,
+						setData.slide_image,
+						setData.carousel,
+						setData.set_id,
+					];
 
-				await pool.query({ text: q, values });
+					await pool.query({ text: q, values });
+				}
 			}
 		}
-	}
 
-	res.send({ message: "data updated successfully!", data: { blog_id: id } });
-});
-
+		res.send({ message: "data updated successfully!", data: { blog_id: id } });
+	}),
+];
 exports.fetchPreviewBlog = asyncHandler(async (req, res, next) => {
 	const blog_slug = req.params.slug;
 	const category = req.params.category;
@@ -305,22 +326,25 @@ exports.getBlogSiteMap = asyncHandler(async (req, res, next) => {
 	res.render("blogs/sitemap", context);
 });
 
-exports.toggleBlogPublish = asyncHandler(async (req, res, next) => {
-	const { id } = req.params;
-	const { is_published: is_published_q } = req.body;
-	const is_published = Boolean(is_published_q);
+exports.toggleBlogPublish = [
+	blogPersmission,
+	asyncHandler(async (req, res, next) => {
+		const { id } = req.params;
+		const { is_published: is_published_q } = req.body;
+		const is_published = Boolean(is_published_q);
 
-	let q = `UPDATE blogs SET 
+		let q = `UPDATE blogs SET 
 					is_published=$1
 				WHERE
 					blog_id=$2
 			`;
-	let values = [is_published, id];
+		let values = [is_published, id];
 
-	await pool.query({ text: q, values });
+		await pool.query({ text: q, values });
 
-	res.send({ message: "data updated successfully!", data: { blog_id: id } });
-});
+		res.send({ message: "data updated successfully!", data: { blog_id: id } });
+	}),
+];
 
 exports.getHome = asyncHandler(async (req, res, next) => {
 	let q = `SELECT blogs.title, blogs.desc, blogs.header_image, blogs.blog_created_time, blogs.blog_update_time, blogs.slug, categories.category, categories.slug as cat_slug FROM blogs left join categories on blogs.category_id=categories.id where is_published=true order by blog_id desc limit 4;`;

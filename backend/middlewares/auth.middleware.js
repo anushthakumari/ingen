@@ -1,8 +1,7 @@
 const asyncHandler = require("../utils/asyncHandler");
 const ErrorResponse = require("../utils/ErrorResponse");
 const { verifyToken } = require("../libs/jwt");
-
-const allowed_roles = ["editor", "admin"];
+const allowed_roles = require("../constants/allowed_editors");
 
 module.exports = asyncHandler((req, res, next) => {
 	const token = req.session.token;

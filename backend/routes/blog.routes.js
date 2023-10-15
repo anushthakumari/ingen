@@ -1,7 +1,7 @@
 const express = require("express");
 
 const auth = require("../middlewares/auth.middleware");
-const roleAuth = require("../middlewares/roleAuth.middleware");
+
 const {
 	getAllBlogs,
 	deleteBlog,
@@ -16,12 +16,10 @@ const router = express.Router();
 router.route("/").get(auth, getAllBlogs).post(auth, createBlog);
 router
 	.route("/:id")
-	.delete(auth, roleAuth("admin"), deleteBlog)
+	.delete(auth, deleteBlog)
 	.get(auth, getSingleRawBlog)
 	.put(auth, updateBlog);
 
-router
-	.route("/:id/toggle-publish")
-	.patch(auth, roleAuth("admin"), toggleBlogPublish);
+router.route("/:id/toggle-publish").patch(auth, toggleBlogPublish);
 
 module.exports = router;

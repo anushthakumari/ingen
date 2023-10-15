@@ -14,10 +14,10 @@ const apiRoutes = require("./backend/routes");
 const staticroutes = require("./backend/routes/staticroutes");
 const { getHome } = require("./backend/controllers/blogs");
 const pool = require("./backend/libs/pool");
+const allowed_roles = require("./backend/constants/allowed_editors");
 
 require("dotenv").config();
 
-const allowed_roles = ["editor", "admin"];
 const cookieexp = parseInt(process.env.TOKEN_EXP_MSEC); //a week
 const PGSessionStore = pgconnect(sessions);
 

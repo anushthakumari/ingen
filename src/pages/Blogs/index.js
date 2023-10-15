@@ -29,9 +29,9 @@ const BlogList = () => {
 	const [openCreateDialog, setopenCreateDialog] = useState(false);
 
 	const browserHistory = useHistory();
-	const role = getRole();
+	// const role = getRole();
 
-	const is_admin = role === "admin";
+	// const is_admin = role === "admin";
 
 	const handleDelete = (blog_id) => {
 		if (
@@ -53,7 +53,9 @@ const BlogList = () => {
 
 	const handleLogOut = () => {
 		logout();
-		window.location.href = "/pages/logout?redirect=pages/creator/signin";
+		window.location.href =
+			process.env.REACT_APP_BASE_URL +
+			"/pages/logout?redirect=pages/creator/signin";
 	};
 
 	useEffect(() => {
@@ -96,9 +98,11 @@ const BlogList = () => {
 									<TableCell align="right">Blog Created At</TableCell>
 									<TableCell align="right">URL</TableCell>
 									<TableCell align="right">Edit</TableCell>
-									{is_admin ? (
+									{/* {is_admin ? (
 										<TableCell align="right">Delete</TableCell>
-									) : null}
+									) : null} */}
+
+									<TableCell align="right">Delete</TableCell>
 								</TableRow>
 							</TableHead>
 							<TableBody>
@@ -141,14 +145,20 @@ const BlogList = () => {
 												<EditIcon color="primary" />
 											</IconButton>
 										</TableCell>
-										{is_admin ? (
+										<TableCell align="right">
+											<IconButton
+												onClick={handleDelete.bind(this, row.blog_id)}>
+												<DeleteIcon color="primary" />
+											</IconButton>
+										</TableCell>
+										{/* {is_admin ? (
 											<TableCell align="right">
 												<IconButton
 													onClick={handleDelete.bind(this, row.blog_id)}>
 													<DeleteIcon color="primary" />
 												</IconButton>
 											</TableCell>
-										) : null}
+										) : null} */}
 									</TableRow>
 								))}
 							</TableBody>

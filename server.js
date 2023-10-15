@@ -5,7 +5,6 @@ const bodyParser = require("body-parser");
 const fs = require("fs");
 const cookieParser = require("cookie-parser");
 const sessions = require("express-session");
-const MongoDBStore = require("connect-mongodb-session");
 
 const errorHandler = require("./backend/middlewares/errorHandler.middleware");
 const { verifyToken } = require("./backend/libs/jwt");
@@ -18,13 +17,15 @@ require("dotenv").config();
 
 const allowed_roles = ["editor", "admin"];
 
-const mongoStore = MongoDBStore(sessions);
 const cookieexp = parseInt(process.env.TOKEN_EXP_MSEC); //a week
-const store = new mongoStore({
-	collection: "userSessions",
-	uri: process.env.mongoURI,
-	expires: cookieexp,
-});
+
+let whitelist;
+
+if (process.env.NODE_ENV === "production") {
+	whitelist = ["https://www.ingenral.com"];
+} else {
+	whitelist = ["http://localhost:3001"];
+}
 
 const app = express();
 
@@ -32,24 +33,27 @@ app.set("view engine", "ejs");
 
 app.use(
 	cors({
+		origin: whitelist,
 		credentials: true,
 	})
 );
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
+if (process.env.NODE_ENV === "production0") {
+	app.set("trust proxy", 1);
+}
+
 app.use(
 	sessions({
 		secret: process.env.TOKEN_KEY,
 		name: "sess_ing",
-		store: store,
 		saveUninitialized: false,
 		resave: false,
 		cookie: {
-			sameSite: false,
+			sameSite: process.env.NODE_ENV === "production" ? "none" : false,
 			secure: process.env.NODE_ENV === "production",
 			maxAge: cookieexp,
-			httpOnly: true,
 		},
 	})
 );

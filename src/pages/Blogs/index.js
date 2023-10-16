@@ -55,7 +55,7 @@ const BlogList = () => {
 		logout();
 		window.location.href =
 			process.env.REACT_APP_SERVER_BASE_URL +
-			"/pages/logout?redirect=pages/creator/signin";
+			"pages/logout?redirect=pages/creator/signin";
 	};
 
 	useEffect(() => {

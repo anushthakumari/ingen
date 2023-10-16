@@ -12,9 +12,8 @@ module.exports.register_user = () =>
 				.trim()
 				.required()
 				.regex(/[a-zA-Z][a-zA-Z ]+[a-zA-Z]$/),
-			org_name: Joi.string()
-				.trim()
-				.regex(/[a-zA-Z][a-zA-Z ]+[a-zA-Z]$/),
+			org_name: Joi.string().allow(null, ""),
+			phone: Joi.string().length(10).required(),
 			cat_id: Joi.number().required(),
 			email: Joi.string().email().trim().required().max(180),
 			pass: Joi.string().required().trim().max(12),

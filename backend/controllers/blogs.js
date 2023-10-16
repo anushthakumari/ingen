@@ -7,6 +7,8 @@ const pool = require("../libs/pool");
 const cat_services = require("../services/categories.services");
 const blogPersmission = require("../middlewares/blogPermission.middleware");
 const { EDITOR } = require("../constants/roles");
+const { ORG } = require("../constants/creator_types");
+const image_path_prefix = require("../constants/image_path_prefixes");
 
 exports.getAllBlogs = asyncHandler(async (req, res, next) => {
 	//query for admin
@@ -345,13 +347,87 @@ exports.toggleBlogPublish = [
 ];
 
 exports.getHome = asyncHandler(async (req, res, next) => {
-	let q = `SELECT blogs.title, blogs.desc, blogs.header_image, blogs.blog_created_time, blogs.blog_update_time, blogs.slug, categories.category, categories.slug as cat_slug FROM blogs left join categories on blogs.category_id=categories.id where is_published=true order by blog_id desc limit 4;`;
-	let q2 = `SELECT blogs.title, blogs.desc, blogs.header_image, blogs.blog_created_time, blogs.blog_update_time, blogs.slug, categories.category, categories.slug as cat_slug FROM blogs left join categories on blogs.category_id=categories.id where is_published=true`;
-	let newsq = `SELECT blogs.title, blogs.desc, blogs.header_image, blogs.blog_created_time, blogs.blog_update_time, blogs.slug, categories.category, categories.slug as cat_slug FROM blogs inner join categories on blogs.category_id=categories.id where is_published=true and categories.slug=$1`;
+	let q = `SELECT
+					blogs.title,
+					blogs.desc,
+					blogs.header_image,
+					blogs.blog_created_time,
+					blogs.blog_update_time,
+					blogs.slug,
+					categories.category,
+					categories.slug as cat_slug,
+					creators.f_name,
+					creators.l_name,
+					creators.org_name,
+					creators.creator_type,
+					creators.profile_img_name
+				FROM blogs
+				LEFT JOIN categories ON blogs.category_id = categories.id
+				LEFT JOIN creators ON blogs.created_by = creators.id
+				WHERE is_published = true
+				ORDER BY blog_id DESC
+				LIMIT 4;`;
+	let q2 = `SELECT
+					blogs.title,
+					blogs.desc,
+					blogs.header_image,
+					blogs.blog_created_time,
+					blogs.blog_update_time,
+					blogs.slug,
+					categories.category,
+					categories.slug as cat_slug,
+					creators.f_name,
+					creators.l_name,
+					creators.org_name,
+					creators.creator_type,
+					creators.profile_img_name
+				FROM blogs
+				LEFT JOIN categories ON blogs.category_id = categories.id
+				LEFT JOIN creators ON blogs.created_by = creators.id
+				WHERE is_published = true;
+`;
+	let newsq = `SELECT
+					blogs.title,
+					blogs.desc,
+					blogs.header_image,
+					blogs.blog_created_time,
+					blogs.blog_update_time,
+					blogs.slug,
+					categories.category,
+					categories.slug as cat_slug,
+					creators.f_name,
+					creators.l_name,
+					creators.org_name,
+					creators.creator_type,
+					creators.profile_img_name
+				FROM blogs
+				INNER JOIN categories ON blogs.category_id = categories.id
+				LEFT JOIN creators ON blogs.created_by = creators.id
+				WHERE is_published = true
+				AND categories.slug = $1;
+`;
 
 	const { rows } = await pool.query(q);
 	const stories = await pool.query(q2);
 	const news = await pool.query({ text: newsq, values: ["news"] });
+
+	const mapBlogData = (v) => ({
+		...v,
+		desc: v.desc.slice(0, 70),
+		blog_update_date: v.blog_update_time
+			? moment(v.blog_update_time).format("MMMM Do YYYY")
+			: undefined,
+		blog_date: moment(v.blog_created_time).format("MMMM Do YYYY"),
+		blog_update_date_iso: v.blog_update_time
+			? moment(v.blog_update_time).toISOString()
+			: undefined,
+		link: `${process.env.BASE_URL}pages/articles/${v.cat_slug}/${v.slug}`,
+		creator_title:
+			v.creator_type === ORG ? v.org_name : v.f_name + " " + v.l_name,
+		creator_profile_url: v.profile_img_name
+			? image_path_prefix.PROFILE_IMAGE + v.profile_img_name
+			: image_path_prefix.PROFILE_IMAGE + "default.png",
+	});
 
 	const context = {
 		url: "",
@@ -359,44 +435,11 @@ exports.getHome = asyncHandler(async (req, res, next) => {
 		description: "We Write All Types Of Blogs",
 		site_name: "InGenral",
 		user_name: req.userData?.name,
-		featured: rows.map((v) => ({
-			...v,
-			desc: v.desc.slice(0, 70),
-			blog_update_date: v.blog_update_time
-				? moment(v.blog_update_time).format("MMMM Do YYYY")
-				: undefined,
-			blog_date: moment(v.blog_created_time).format("MMMM Do YYYY"),
-			blog_update_date_iso: v.blog_update_time
-				? moment(v.blog_update_time).toISOString()
-				: undefined,
-			link: `${process.env.BASE_URL}pages/articles/${v.cat_slug}/${v.slug}`,
-		})),
+		featured: rows.map(mapBlogData),
 
-		news: news.rows.map((v) => ({
-			...v,
-			desc: v.desc.slice(0, 70),
-			blog_update_date: v.blog_update_time
-				? moment(v.blog_update_time).format("MMMM Do YYYY")
-				: undefined,
-			blog_date: moment(v.blog_created_time).format("MMMM Do YYYY"),
-			blog_update_date_iso: v.blog_update_time
-				? moment(v.blog_update_time).toISOString()
-				: undefined,
-			link: `${process.env.BASE_URL}pages/articles/${v.cat_slug}/${v.slug}`,
-		})),
+		news: news.rows.map(mapBlogData),
 
-		stories: stories.rows.map((v) => ({
-			...v,
-			desc: v.desc.slice(0, 70),
-			blog_update_date: v.blog_update_time
-				? moment(v.blog_update_time).format("MMMM Do YYYY")
-				: undefined,
-			blog_date: moment(v.blog_created_time).format("MMMM Do YYYY"),
-			blog_update_date_iso: v.blog_update_time
-				? moment(v.blog_update_time).toISOString()
-				: undefined,
-			link: `${process.env.BASE_URL}pages/articles/${v.cat_slug}/${v.slug}`,
-		})),
+		stories: stories.rows.map(mapBlogData),
 	};
 
 	res.render("home_page", context);

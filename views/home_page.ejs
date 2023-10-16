@@ -183,12 +183,15 @@
 										<div class="wrapfooter">
 											<span class="meta-footer-thumb">
 												<a href="#"
-													><img class="author-thumb" src="logo.png" alt="Sal"
+													><img
+														class="author-thumb"
+														src="<%= b.creator_profile_url %>"
+														alt="<%= b.creator_title %>"
 												/></a>
 											</span>
 											<span class="author-meta">
 												<span class="post-name"
-													><a href="#">Team InGenral</a></span
+													><a href="#"><%= b.creator_title %></a></span
 												><br />
 												<span class="post-date">
 													<% if (b.blog_update_date) { %>
@@ -313,11 +316,15 @@
 								<div class="wrapfooter">
 									<span class="meta-footer-thumb">
 										<a href="#"
-											><img class="author-thumb" src="logo.png" alt="Sal"
+											><img
+												class="author-thumb"
+												src="<%= b.creator_profile_url %>"
+												alt="<%= b.creator_title %>"
 										/></a>
 									</span>
 									<span class="author-meta">
-										<span class="post-name"><a href="#">Team InGenral</a></span
+										<span class="post-name"
+											><a href="#"> <%= b.creator_title %></a></span
 										><br />
 										<span class="post-date">
 											<% if (b.blog_update_date) { %>
@@ -472,12 +479,12 @@
 										<div class="wrapfooter">
 											<span class="meta-footer-thumb">
 												<a href="#"
-													><img class="author-thumb" src="logo.png" alt="Sal"
+													><img class="author-thumb" src="${b.creator_profile_url}" alt="${b.creator_title}"
 												/></a>
 											</span>
 											<span class="author-meta">
 												<span class="post-name"
-													><a href="#">Team InGenral</a></span
+													><a href="#">${b.creator_title}</a></span
 												><br />
 												<span class="post-date">
 													${b.blog_update_date ? `<time datetime="${b.blog_update_date_iso}">

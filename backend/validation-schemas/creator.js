@@ -17,6 +17,7 @@ module.exports.register_user = () =>
 			cat_id: Joi.number().required(),
 			email: Joi.string().email().trim().required().max(180),
 			pass: Joi.string().required().trim().max(12),
+			c_pass: Joi.string().required().trim().max(12),
 			gender: Joi.string().required(),
 			creator_type: Joi.string().required().valid(ORG, IND),
 		}),

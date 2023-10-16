@@ -210,19 +210,17 @@ exports.updateImage = [
 
 		const prev_file_name = rows[0].profile_img_name;
 
-		if (!prev_file_name || prev_file_name === "default.png") {
-			return;
-		}
-
-		const full_file_path = path.join(
-			"images",
-			"profile_images",
-			prev_file_name
-		);
-
 		//delete existing
-		if (fs.existsSync(full_file_path)) {
-			fs.unlinkSync(full_file_path);
+		if (prev_file_name && prev_file_name !== "default.png") {
+			const full_file_path = path.join(
+				"images",
+				"profile_images",
+				prev_file_name
+			);
+
+			if (fs.existsSync(full_file_path)) {
+				fs.unlinkSync(full_file_path);
+			}
 		}
 
 		const q = `update ${TABLE_NAME} set

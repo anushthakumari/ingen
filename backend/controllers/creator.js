@@ -8,7 +8,7 @@ const { generateToken } = require("../libs/jwt");
 const googleAuth = require("../libs/googleAuth");
 const cat_services = require("../services/categories.services");
 const { EDITOR } = require("../constants/roles");
-const { ORG } = require("../constants/creator_types");
+const { ORG, IND } = require("../constants/creator_types");
 const uploader = require("../middlewares/multer.middleware");
 const ErrorResponse = require("../utils/ErrorResponse");
 
@@ -40,14 +40,21 @@ exports.sign_up_page = asyncHandler(async (req, res, next) => {
 			return;
 		}
 
-		const { rowCount: phone_count } = await pool.query({
-			text: `SELECT * FROM ${TABLE_NAME} where phone=$1`,
-			values: [body.phone],
-		});
+		// const { rowCount: phone_count } = await pool.query({
+		// 	text: `SELECT * FROM ${TABLE_NAME} where phone=$1`,
+		// 	values: [body.phone],
+		// });
 
-		if (phone_count) {
+		// if (phone_count) {
+		// 	res.status(400).send({
+		// 		message: "User with this phone already exists!",
+		// 	});
+		// 	return;
+		// }
+
+		if (body.pass.trim() !== body.c_pass.trim()) {
 			res.status(400).send({
-				message: "User with this phone already exists!",
+				message: "passwords didn't match!",
 			});
 			return;
 		}
@@ -60,13 +67,13 @@ exports.sign_up_page = asyncHandler(async (req, res, next) => {
 			values: [
 				body.f_name.trim(),
 				body.l_name.trim(),
-				body.org_name?.trim() || null,
-				parseInt(body.cat_id),
+				null,
+				1,
 				body.email.trim(),
-				body.phone.trim(),
-				body.gender.trim(),
+				null,
+				"male",
 				hash,
-				body.creator_type.trim(),
+				IND,
 				"default.png",
 			],
 		});
@@ -155,33 +162,63 @@ exports.login_page = asyncHandler(async (req, res, next) => {
 exports.google_login = asyncHandler(async (req, res, next) => {
 	const google_creds_str = req.body.credential;
 
-	const { email } = await googleAuth.verify(google_creds_str);
+	const { email, given_name, family_name, name } = await googleAuth.verify(
+		google_creds_str
+	);
 
-	const { rows, rowCount } = await pool.query({
+	let { rows, rowCount } = await pool.query({
 		text: `SELECT * FROM ${TABLE_NAME} where email=$1`,
 		values: [email],
 	});
 
-	if (!rowCount) {
-		const conetxt = {
-			message: "User with this email doesn't exist!, Please register yourself!",
-			btn_message: "Go to Register",
-			btn_url: process.env.BASE_URL + "pages/creator/signup",
-		};
-		res.render("error_page", conetxt);
-		return;
-	}
+	let token;
+	let path;
 
-	const token = generateToken({
-		id: rows[0].id,
-		email: rows[0].email,
-		name: rows[0].f_name,
-		role: rows[0].role,
-	});
+	//register user
+	if (!rowCount) {
+		const pass = `${email}_${given_name}`;
+		const salt = await bcrypt.genSalt(saltRounds);
+		const hash = await bcrypt.hash(pass, salt);
+
+		const { rows: insertedRows } = await pool.query({
+			text: `INSERT INTO ${TABLE_NAME}(f_name, l_name, org_name, cat_id, email, phone, gender, pass, creator_type, profile_img_name) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) RETURNING id`,
+			values: [
+				given_name,
+				family_name ? family_name : name,
+				null,
+				1,
+				email,
+				null,
+				"male",
+				hash,
+				IND,
+				"default.png",
+			],
+		});
+
+		token = generateToken({
+			id: insertedRows[0].id,
+			email: email,
+			name: given_name,
+			role: EDITOR,
+		});
+
+		path = "/creator/profile";
+	} else {
+		//login user
+		token = generateToken({
+			id: rows[0].id,
+			email: rows[0].email,
+			name: rows[0].f_name,
+			role: rows[0].role,
+		});
+
+		path = "/creator";
+	}
 
 	req.session.token = token;
 
-	res.redirect("/creator");
+	res.redirect(path);
 });
 
 exports.get_profile = asyncHandler(async (req, res, next) => {
@@ -241,14 +278,31 @@ exports.update_profile = asyncHandler(async (req, res) => {
 		throw new ErrorResponse("Organisation name is required", 400);
 	}
 
+	if (body.phone) {
+		const phone = body.phone.trim();
+
+		const { rowCount: phone_count } = await pool.query({
+			text: `SELECT * FROM ${TABLE_NAME} where phone=$1 and id!=$2`,
+			values: [phone, req.userData.id],
+		});
+
+		if (phone_count) {
+			res.status(400).send({
+				message: "User with this phone already exists!",
+			});
+			return;
+		}
+	}
+
 	const text = `UPDATE ${TABLE_NAME} set
 						f_name=$1,
 						l_name=$2,
 						gender=$3,
 						cat_id=$4,
 						creator_type=$5,
-						org_name=$6
-				  WHERE id=$7`;
+						org_name=$6,
+						phone=$7
+				  WHERE id=$8`;
 	const values = [
 		body.f_name.trim(),
 		body.l_name.trim(),
@@ -256,6 +310,7 @@ exports.update_profile = asyncHandler(async (req, res) => {
 		parseInt(body.cat_id),
 		body.creator_type.trim(),
 		body.org_name?.trim() || null,
+		body.phone?.trim() || null,
 		req.userData.id,
 	];
 

@@ -29,6 +29,12 @@
 			style="background-image: url('/public_images/bg-registration-form-1.jpg')"
 		>
 			<div class="inner">
+				<div class="image-holder">
+					<img
+						src="/public_images/registration-form-1.jpg"
+						alt="background-image"
+					/>
+				</div>
 				<form id="form" method="post" action="">
 					<h3>Sign Up With Us!!</h3>
 					<div>
@@ -75,7 +81,7 @@
 						/>
 					</div>
 
-					<!-- <div class="form-wrapper">
+					<div class="form-wrapper">
 						<select
 							name="creator_type"
 							id="creator_type"
@@ -87,9 +93,9 @@
 							<option value="organisation">Organisation</option>
 							<option value="individual">Individual</option>
 						</select>
-					</div> -->
+					</div>
 
-					<!-- <div class="form-wrapper" id="org_name_container">
+					<div class="form-wrapper" id="org_name_container">
 						<input
 							type="text"
 							name="org_name"
@@ -104,7 +110,7 @@
 							required
 						/>
 						<span id="org_name_err" aria-live="assertive"></span>
-					</div> -->
+					</div>
 
 					<div class="form-wrapper">
 						<input
@@ -120,7 +126,7 @@
 						/>
 						<span id="email_err" aria-live="assertive"></span>
 					</div>
-					<!-- <div class="form-wrapper">
+					<div class="form-wrapper">
 						<input
 							type="tel"
 							name="phone"
@@ -135,8 +141,8 @@
 						/>
 
 						<span id="phone_err" aria-live="assertive"></span>
-					</div> -->
-					<!-- <div class="form-wrapper">
+					</div>
+					<div class="form-wrapper">
 						<select
 							name="gender"
 							aria-label="Gender"
@@ -149,8 +155,8 @@
 							<option value="female">Female</option>
 							<option value="other">Other</option>
 						</select>
-					</div> -->
-					<!-- <div class="form-wrapper">
+					</div>
+					<div class="form-wrapper">
 						<select
 							name="cat_id"
 							aria-label="Category"
@@ -163,7 +169,7 @@
 							<option value="<%= cat.id %>"><%= cat.category %></option>
 							<% }); %>
 						</select>
-					</div> -->
+					</div>
 					<div class="form-wrapper">
 						<input
 							type="password"
@@ -206,15 +212,8 @@
 						<a href="/pages/creator/signin">Login Here</a>
 					</div>
 					<button id="submit-btn" type="submit">Register</button>
-				</form>
-				<div class="image-holder" style="min-width: 300px">
 					<div
-						style="
-							height: 100%;
-							display: flex;
-							justify-content: center;
-							align-items: center;
-						"
+						style="display: flex; justify-content: center; align-items: center"
 					>
 						<div
 							style="margin-top: 20px"
@@ -227,7 +226,7 @@
 							data-logo_alignment="left"
 						></div>
 					</div>
-				</div>
+				</form>
 			</div>
 		</div>
 		<div
@@ -242,16 +241,16 @@
 		<script>
 			const formEle = document.getElementById("form");
 			const btn = document.getElementById("submit-btn");
-			// const creator_type_select_ele = document.getElementById("creator_type");
-			// const org_name_container_ele =
-			// 	document.getElementById("org_name_container");
+			const creator_type_select_ele = document.getElementById("creator_type");
+			const org_name_container_ele =
+				document.getElementById("org_name_container");
 
 			addInputListeners();
 
-			// creator_type_select_ele.addEventListener(
-			// 	"change",
-			// 	creator_type_select_handler
-			// );
+			creator_type_select_ele.addEventListener(
+				"change",
+				creator_type_select_handler
+			);
 
 			formEle.addEventListener("submit", formSubmitHandler);
 
@@ -326,7 +325,7 @@
 				try {
 					await axios.post(window.location.href, data);
 					alert("Welcome!!");
-					window.location.href = "/creator/profile";
+					window.location.href = "/creator";
 				} catch (error) {
 					if (error.response) {
 						alert(error.response.data.message);

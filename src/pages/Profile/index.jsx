@@ -23,6 +23,10 @@ const Profile = () => {
 		cat_id: 0,
 		creator_type: "",
 		org_name: "",
+		f_name: "",
+		l_name: "",
+		email: "",
+		phone: "",
 	});
 
 	const profile_image_url =
@@ -75,6 +79,7 @@ const Profile = () => {
 				cat_id: userData.cat_id,
 				gender: userData.gender,
 				creator_type: userData.creator_type,
+				phone: userData.phone,
 			});
 
 			alert("Updated Successfully!");
@@ -161,6 +166,7 @@ const Profile = () => {
 								<FormControl fullWidth>
 									{/* <InputLabel htmlFor="f_name">First Name</InputLabel> */}
 									<TextField
+										label="First Name"
 										id="f_name"
 										name="f_name"
 										onChange={onChangeHandler}
@@ -172,6 +178,7 @@ const Profile = () => {
 								<FormControl fullWidth>
 									{/* <InputLabel htmlFor="l_name">Last Name</InputLabel> */}
 									<TextField
+										label="Last Name"
 										id="l_name"
 										name="l_name"
 										onChange={onChangeHandler}
@@ -185,6 +192,7 @@ const Profile = () => {
 								<FormControl fullWidth>
 									{/* <InputLabel htmlFor="email">Email</InputLabel> */}
 									<TextField
+										label="Email"
 										id="email"
 										name="email"
 										onChange={onChangeHandler}
@@ -197,11 +205,11 @@ const Profile = () => {
 								<FormControl fullWidth>
 									{/* <InputLabel htmlFor="phone">Phone Number</InputLabel> */}
 									<TextField
+										label="Phone"
 										id="phone"
 										name="phone"
 										value={userData.phone}
 										onChange={onChangeHandler}
-										disabled
 									/>
 								</FormControl>
 							</Grid>
@@ -262,8 +270,9 @@ const Profile = () => {
 							</Grid>
 							<Grid sm={6} item>
 								<FormControl fullWidth>
-									<InputLabel htmlFor="org_name">Organisation Name</InputLabel>
+									{/* <InputLabel htmlFor="org_name">Organisation Name</InputLabel> */}
 									<TextField
+										label="Oraganisation Name"
 										id="org_name"
 										name="org_name"
 										value={userData.org_name}

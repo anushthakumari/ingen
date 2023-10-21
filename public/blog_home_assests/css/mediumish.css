@@ -46,6 +46,13 @@ section {
 	margin-bottom: -1px;
 }
 
+.card-image-stories {
+	height: 200px;
+	width: 100%;
+	object-fit: cover;
+	object-position: center;
+}
+
 @media (min-width:576px) {
 	.card-columns.listfeaturedtag {
 		-webkit-column-count: 2;

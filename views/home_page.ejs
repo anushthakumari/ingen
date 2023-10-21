@@ -303,40 +303,45 @@
 					<!-- Blog posts -->
 
 					<% if (featured) { %> <% featured.forEach(function(b){ %>
-					<div class="card">
-						<a href="<%= b.link %>" target="_blank">
-							<img class="img-fluid" src="<%= b.header_image %>" alt="" />
-						</a>
-						<div class="card-block">
-							<h2 class="card-title">
-								<a href="<%= b.link %>" target="_blank"><%= b.title %></a>
-							</h2>
-							<h4 class="card-text"><%= b.desc %></h4>
-							<div class="metafooter">
-								<div class="wrapfooter">
-									<span class="meta-footer-thumb">
-										<a href="#"
-											><img
-												class="author-thumb"
-												src="<%= b.creator_profile_url %>"
-												alt="<%= b.creator_title %>"
-										/></a>
-									</span>
-									<span class="author-meta">
-										<span class="post-name"
-											><a href="#"> <%= b.creator_title %></a></span
-										><br />
-										<span class="post-date">
-											<% if (b.blog_update_date) { %>
-											<time datetime="<%= b.blog_update_date_iso %>">
-												last updated at <%= b.blog_update_date %>
-											</time>
-											<% } %>
+					<div>
+						<div class="card">
+							<a href="<%= b.link %>" target="_blank">
+								<img
+									class="img-fluid card-image-stories"
+									src="<%= b.header_image %>"
+									alt="<%= b.title %>"
+								/>
+							</a>
+							<div class="card-block">
+								<h2 class="card-title">
+									<a href="<%= b.link %>" target="_blank"><%= b.title %></a>
+								</h2>
+								<h4 class="card-text"><%= b.desc %></h4>
+								<div class="metafooter">
+									<div class="wrapfooter">
+										<span class="meta-footer-thumb">
+											<a href="#"
+												><img
+													class="author-thumb"
+													src="<%= b.creator_profile_url %>"
+													alt="<%= b.creator_title %>"
+											/></a>
 										</span>
-										<!-- <span class="dot"></span> -->
-										<!-- <span class="post-read">6 min read</span> -->
-									</span>
-									<!-- <span class="post-read-more"
+										<span class="author-meta">
+											<span class="post-name"
+												><a href="#"> <%= b.creator_title %></a></span
+											><br />
+											<span class="post-date">
+												<% if (b.blog_update_date) { %>
+												<time datetime="<%= b.blog_update_date_iso %>">
+													last updated at <%= b.blog_update_date %>
+												</time>
+												<% } %>
+											</span>
+											<!-- <span class="dot"></span> -->
+											<!-- <span class="post-read">6 min read</span> -->
+										</span>
+										<!-- <span class="post-read-more"
 										><a href="post.html" title="Read Story"
 											><svg
 												class="svgIcon-use"
@@ -349,6 +354,7 @@
 													fill-rule="evenodd"
 												></path></svg></a
 									></span> -->
+									</div>
 								</div>
 							</div>
 						</div>

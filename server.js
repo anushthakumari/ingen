@@ -8,22 +8,24 @@ const sessions = require("express-session");
 const pgconnect = require("connect-pg-simple");
 
 const errorHandler = require("./backend/middlewares/errorHandler.middleware");
-const { verifyToken } = require("./backend/libs/jwt");
 const sessionTokenParser = require("./backend/middlewares/tokenParser.middleware");
 const apiRoutes = require("./backend/routes");
 const staticroutes = require("./backend/routes/staticroutes");
 const { getHome } = require("./backend/controllers/blogs");
 const pool = require("./backend/libs/pool");
 const allowed_roles = require("./backend/constants/allowed_editors");
+const { is_prod_env } = require("./backend/utils/helpers");
 
 require("dotenv").config();
 
+const is_prod = is_prod_env();
 const cookieexp = parseInt(process.env.TOKEN_EXP_MSEC); //a week
 const PGSessionStore = pgconnect(sessions);
+const NON_REACT_ROUTES = ["/media", "/api", "/pages"];
 
 let whitelist;
 
-if (process.env.NODE_ENV === "production") {
+if (is_prod) {
 	whitelist = ["https://www.ingenral.com"];
 } else {
 	whitelist = ["http://localhost:3001"];
@@ -39,10 +41,11 @@ app.use(
 		credentials: true,
 	})
 );
+
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-if (process.env.NODE_ENV === "production") {
+if (is_prod) {
 	app.set("trust proxy", 1);
 }
 
@@ -57,8 +60,8 @@ app.use(
 		saveUninitialized: false,
 		resave: false,
 		cookie: {
-			sameSite: process.env.NODE_ENV === "production",
-			secure: process.env.NODE_ENV === "production",
+			sameSite: is_prod,
+			secure: is_prod,
 			maxAge: cookieexp,
 		},
 	})
@@ -67,32 +70,44 @@ app.use(
 app.use(cookieParser());
 
 //Serve static files from the "build" directory
-app.use("/", async (req, res, next) => {
+app.use("*", sessionTokenParser, async (req, res, next) => {
 	const filename = req.originalUrl;
 
+	//return home page
 	if (filename === "/") {
-		return next();
+		await getHome(req, res, next);
+		return;
 	}
 
-	const filepath = path.join(__dirname, "build", filename);
+	if (NON_REACT_ROUTES.some((r) => filename.startsWith(r))) {
+		next();
+		return;
+	}
 
+	const folderName = is_prod
+		? "build"
+		: filename.startsWith("/static")
+		? "build"
+		: "public";
+
+	const filepath = path.join(__dirname, folderName, filename);
+
+	//handle react routes
 	if (filename.startsWith("/creator")) {
-		const token = req.session.token;
-		if (!token) {
+		if (!req.userData) {
 			res.redirect("/pages/creator/signin");
 			return;
 		}
 
-		let decoded = verifyToken(token);
-
-		if (!allowed_roles.includes(decoded.role)) {
+		if (!allowed_roles.includes(req.userData.role)) {
 			res.redirect("/pages/creator/signin");
 			return;
 		}
 
-		res.cookie("role", decoded.role, {
+		res.cookie("role", req.userData.role, {
 			httpOnly: false,
 		});
+
 		return res.sendFile(path.join(__dirname, "build", "index.html"));
 	}
 
@@ -107,8 +122,6 @@ app.use("/", async (req, res, next) => {
 app.use("/media", express.static("images"));
 app.use("/api", apiRoutes);
 app.use("/pages", staticroutes);
-
-app.use("/*", sessionTokenParser, getHome);
 
 app.use(errorHandler);
 

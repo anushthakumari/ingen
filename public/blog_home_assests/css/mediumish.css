@@ -261,6 +261,10 @@ span.post-read-more a:hover {
 	margin-right: 5px;
 }
 
+.mainheading {
+	background-color: #EE9322;
+}
+
 .mainheading h1.sitetitle {
 	font-family: Righteous;
 }

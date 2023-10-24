@@ -410,6 +410,7 @@ exports.getHome = asyncHandler(async (req, res, next) => {
 	const { rows } = await pool.query(q);
 	const stories = await pool.query(q2);
 	const news = await pool.query({ text: newsq, values: ["news"] });
+	const cats = await cat_services.get_all_cats();
 
 	const mapBlogData = (v) => ({
 		...v,
@@ -440,6 +441,8 @@ exports.getHome = asyncHandler(async (req, res, next) => {
 		news: news.rows.map(mapBlogData),
 
 		stories: stories.rows.map(mapBlogData),
+
+		cats,
 	};
 
 	res.render("home_page", context);

@@ -7,6 +7,8 @@ const cookieParser = require("cookie-parser");
 const sessions = require("express-session");
 const pgconnect = require("connect-pg-simple");
 
+require("dotenv").config();
+
 const errorHandler = require("./backend/middlewares/errorHandler.middleware");
 const sessionTokenParser = require("./backend/middlewares/tokenParser.middleware");
 const apiRoutes = require("./backend/routes");
@@ -15,8 +17,6 @@ const { getHome } = require("./backend/controllers/blogs");
 const pool = require("./backend/libs/pool");
 const allowed_roles = require("./backend/constants/allowed_editors");
 const { is_prod_env } = require("./backend/utils/helpers");
-
-require("dotenv").config();
 
 const is_prod = is_prod_env();
 const cookieexp = parseInt(process.env.TOKEN_EXP_MSEC); //a week

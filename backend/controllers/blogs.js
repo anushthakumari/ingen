@@ -6,7 +6,9 @@ const ErrorResponse = require("../utils/ErrorResponse");
 const pool = require("../libs/pool");
 const cat_services = require("../services/categories.services");
 const blogPersmission = require("../middlewares/blogPermission.middleware");
+
 const { EDITOR } = require("../constants/roles");
+const globals = require("../constants/globals");
 const { ORG } = require("../constants/creator_types");
 const image_path_prefix = require("../constants/image_path_prefixes");
 
@@ -431,17 +433,15 @@ exports.getHome = asyncHandler(async (req, res, next) => {
 	});
 
 	const context = {
-		url: "",
+		url: globals.BASE_URL,
 		title: "InGenral - Everything You Seek!",
-		description: "We Write All Types Of Blogs",
+		description:
+			"Explore diverse perspectives and stay abreast of current events",
 		site_name: "InGenral",
 		user_name: req.userData?.name,
 		featured: rows.map(mapBlogData),
-
 		news: news.rows.map(mapBlogData),
-
 		stories: stories.rows.map(mapBlogData),
-
 		cats,
 	};
 

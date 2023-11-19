@@ -7,10 +7,12 @@ const pool = require("../libs/pool");
 const { generateToken } = require("../libs/jwt");
 const googleAuth = require("../libs/googleAuth");
 const cat_services = require("../services/categories.services");
-const { EDITOR } = require("../constants/roles");
-const { ORG, IND } = require("../constants/creator_types");
 const uploader = require("../middlewares/multer.middleware");
 const ErrorResponse = require("../utils/ErrorResponse");
+
+const { EDITOR } = require("../constants/roles");
+const { ORG, IND } = require("../constants/creator_types");
+const globals = require("../constants/globals");
 
 const imageUpload = uploader("profile_images");
 
@@ -99,6 +101,10 @@ exports.sign_up_page = asyncHandler(async (req, res, next) => {
 		const cats = await cat_services.get_all_cats();
 
 		const context = {
+			url: globals.BASE_URL + "pages/creator/signup",
+			title: "InGenral | Creator Sign Up",
+			description:
+				"Become a contributor on inGenral by signing up as a creator. Join our platform to share your unique political perspectives with a global audience. As a registered creator, you'll have the tools and support to publish articles, express expert opinions, and contribute to the diverse landscape of political content. Start your journey as a creator on inGenral by signing up for a free account. Join our community of influencers and thought leaders, and make a lasting impact on the world of political journalism.",
 			cats,
 		};
 		res.render("creators/signup", context);
@@ -156,7 +162,14 @@ exports.login_page = asyncHandler(async (req, res, next) => {
 		return;
 	}
 
-	res.render("creators/signin");
+	const context = {
+		url: globals.BASE_URL + "pages/creator/signin",
+		title: "InGenral | Creator Sign In",
+		description:
+			"Creators, sign in to inGenral to manage and contribute your unique political content. Access tools and features designed for creators, and share your perspectives with our engaged audience. As a creator on inGenral, you'll have the opportunity to publish articles, share expert opinions, and contribute to the dynamic political discourse. Sign in now to unleash your creative potential and make a meaningful impact in the world of political journalism.",
+	};
+
+	res.render("creators/signin", context);
 });
 
 exports.google_login = asyncHandler(async (req, res, next) => {

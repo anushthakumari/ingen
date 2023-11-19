@@ -3,8 +3,9 @@ const bcrypt = require("bcrypt");
 const asyncHandler = require("../utils/asyncHandler");
 const pool = require("../libs/pool");
 const { generateToken } = require("../libs/jwt");
-const { READER } = require("../constants/roles");
 
+const { READER } = require("../constants/roles");
+const globals = require("../constants/globals");
 const TABLE_NAME = "readers";
 
 const saltRounds = 10;
@@ -60,7 +61,14 @@ exports.login = asyncHandler(async (req, res, next) => {
 		return;
 	}
 
-	res.render("signin");
+	const context = {
+		url: globals.BASE_URL + "pages/login",
+		title: "InGenral | Reader Login",
+		description:
+			"Securely log in to inGenral and access a personalized reading experience. Engage with high-quality political content tailored to your interests. Join our community of informed readers, where you can explore in-depth articles, expert opinions, and breaking news on political events. Your inGenral reader account provides a seamless and curated news journey. Log in now for an enriched reading experience and stay updated on the latest political insights.",
+	};
+
+	res.render("signin", context);
 });
 
 exports.register = asyncHandler(async (req, res, next) => {
@@ -114,7 +122,15 @@ exports.register = asyncHandler(async (req, res, next) => {
 		res.redirect("/");
 		return;
 	}
-	res.render("signup");
+
+	const context = {
+		url: globals.BASE_URL + "pages/register",
+		title: "InGenral | Reader Register",
+		description:
+			"Join inGenral and unlock a world of curated political insights. Register for a reader account to personalize your news feed, participate in discussions, and access exclusive content. As a registered reader, you'll stay informed with in-depth articles, expert opinions, and breaking news on political events. Be part of our vibrant community, share your perspectives, and connect with like-minded individuals. Start your inGenral reader journey today by signing up for a free account.",
+	};
+
+	res.render("signup", context);
 });
 
 exports.log_out = asyncHandler(async (req, res) => {

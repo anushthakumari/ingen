@@ -55,9 +55,15 @@ async function generateBlogSitemap() {
 
 	const blogEntries = articles.map((article) => {
 		const articleUrl = `/articles/${article.category_slug}/${article.slug}`;
-		return `<url><loc>${globals.BASE_URL}pages${articleUrl}</loc><lastmod>${
-			article.blog_update_time || article.blog_created_time
-		}</lastmod></url>`;
+		const lastmod = article.blog_update_time || article.blog_created_time;
+
+		// Format the date to the required format
+		const lastmodFormatted = new Date(lastmod).toISOString();
+
+		return `<url>
+              <loc>${globals.BASE_URL}pages${articleUrl}</loc>
+              <lastmod>${lastmodFormatted}</lastmod>
+            </url>`;
 	});
 
 	return blogEntries;

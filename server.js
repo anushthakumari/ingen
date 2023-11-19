@@ -17,6 +17,7 @@ const { getHome } = require("./backend/controllers/blogs");
 const pool = require("./backend/libs/pool");
 const allowed_roles = require("./backend/constants/allowed_editors");
 const { is_prod_env } = require("./backend/utils/helpers");
+const jobs = require("./backend/jobs");
 
 const is_prod = is_prod_env();
 const cookieexp = parseInt(process.env.TOKEN_EXP_MSEC); //a week
@@ -125,8 +126,19 @@ app.use("/pages", staticroutes);
 
 app.use(errorHandler);
 
+jobs.start();
+
 const port = 3000;
 
 app.listen(port, () => {
 	console.log(`Server is running on port ${port}`);
+});
+
+// Handle graceful shutdown
+process.on("SIGINT", () => {
+	//stop the jobs
+	jobs.stop();
+
+	//exit
+	process.exit();
 });

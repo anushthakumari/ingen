@@ -27,7 +27,11 @@ const NON_REACT_ROUTES = ["/media", "/api", "/pages"];
 let whitelist;
 
 if (is_prod) {
-	whitelist = ["https://www.ingenral.com"];
+	whitelist = [
+		"https://www.ingenral.com",
+		"http://localhost:3001",
+		"https://guru-mantra-faculty-dash.netlify.app",
+	];
 } else {
 	whitelist = ["http://localhost:3001"];
 }

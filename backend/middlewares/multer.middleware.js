@@ -18,11 +18,11 @@ module.exports = (uploadPath, allowedTypes = []) => {
 
 		console.log({ type: file.mimetype });
 
-		if (allowed_types.includes(file.mimetype)) {
-			return cb(null, true);
-		} else {
-			cb("Upload Error Images Only!!!", false);
-		}
+		// if (allowed_types.includes(file.mimetype)) {
+		return cb(null, true);
+		// } else {
+		// 	cb("Upload Error Images Only!!!", false);
+		// }
 	}
 
 	const storage = multer.diskStorage({

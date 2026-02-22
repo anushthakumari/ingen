@@ -3,7 +3,7 @@ const { is_prod_env } = require("../utils/helpers");
 
 const pool = new Pool({
 	connectionString:
-		process.env.POSTGRES_URL + (is_prod_env() ? "?sslmode=require" : ""),
+		process.env.POSTGRES_URL,
 });
 
 module.exports = pool;

@@ -102,9 +102,13 @@ exports.sign_up_page = asyncHandler(async (req, res, next) => {
 
 		const context = {
 			url: globals.BASE_URL + "pages/creator/signup",
-			title: "InGenral | Creator Sign Up",
+			title: globals.APP.site_name + " | Creator Sign Up",
 			description:
-				"Become a contributor on inGenral by signing up as a creator. Join our platform to share your unique political perspectives with a global audience. As a registered creator, you'll have the tools and support to publish articles, express expert opinions, and contribute to the diverse landscape of political content. Start your journey as a creator on inGenral by signing up for a free account. Join our community of influencers and thought leaders, and make a lasting impact on the world of political journalism.",
+				"Become a contributor on " +
+				globals.APP.site_name +
+				" by signing up as a creator. Join our platform to share your unique political perspectives with a global audience. As a registered creator, you'll have the tools and support to publish articles, express expert opinions, and contribute to the diverse landscape of political content. Start your journey as a creator on " +
+				globals.APP.site_name +
+				" by signing up for a free account. Join our community of influencers and thought leaders, and make a lasting impact on the world of political journalism.",
 			cats,
 		};
 		res.render("creators/signup", context);
@@ -164,9 +168,13 @@ exports.login_page = asyncHandler(async (req, res, next) => {
 
 	const context = {
 		url: globals.BASE_URL + "pages/creator/signin",
-		title: "InGenral | Creator Sign In",
+		title: globals.APP.site_name + " | Creator Sign In",
 		description:
-			"Creators, sign in to inGenral to manage and contribute your unique political content. Access tools and features designed for creators, and share your perspectives with our engaged audience. As a creator on inGenral, you'll have the opportunity to publish articles, share expert opinions, and contribute to the dynamic political discourse. Sign in now to unleash your creative potential and make a meaningful impact in the world of political journalism.",
+			"Creators, sign in to " +
+			globals.APP.site_name +
+			" to manage and contribute your unique political content. Access tools and features designed for creators, and share your perspectives with our engaged audience. As a creator on " +
+			globals.APP.site_name +
+			", you'll have the opportunity to publish articles, share expert opinions, and contribute to the dynamic political discourse. Sign in now to unleash your creative potential and make a meaningful impact in the world of political journalism.",
 	};
 
 	res.render("creators/signin", context);

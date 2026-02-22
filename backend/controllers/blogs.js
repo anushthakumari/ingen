@@ -320,9 +320,9 @@ exports.getBlogSiteMap = asyncHandler(async (req, res, next) => {
 		base_url,
 		blogs_text_hrefs,
 		url: process.env.BASE_URL + "pages/sitemap",
-		title: "InGenral Sitemap Page",
-		description: "site map of InGenral.com",
-		site_name: "InGenral",
+		title: globals.APP.site_name +" Sitemap Page",
+		description: "site map of " + globals.APP.site_name,
+		site_name: globals.APP.site_name,
 	};
 
 	res.render("blogs/sitemap", context);

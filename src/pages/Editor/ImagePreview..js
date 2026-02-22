@@ -29,14 +29,14 @@ const ImagePreview = ({ defaulImges, onCrossClick }) => {
 						<img
 							width="100"
 							height={"100"}
-							src={`${configs.BASE_URL}/${e}`}
+							src={`/${e}`}
 							alt=""
 						/>
 					</div>
 				) : (
 					""
-				)
-		  )
+				),
+			)
 		: null;
 };
 

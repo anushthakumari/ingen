@@ -65,7 +65,7 @@ exports.login = asyncHandler(async (req, res, next) => {
 		url: globals.BASE_URL + "pages/login",
 		title: globals.APP.site_name + " | Reader Login",
 		description:
-			"Securely log in to inGenral and access a personalized reading experience. Engage with high-quality political content tailored to your interests. Join our community of informed readers, where you can explore in-depth articles, expert opinions, and breaking news on political events. Your inGenral reader account provides a seamless and curated news journey. Log in now for an enriched reading experience and stay updated on the latest political insights.",
+			"Securely log in to "+globals.APP.site_name+" and access a personalized reading experience. Engage with high-quality political content tailored to your interests. Join our community of informed readers, where you can explore in-depth articles, expert opinions, and breaking news on political events. Your "+globals.APP.site_name+" reader account provides a seamless and curated news journey. Log in now for an enriched reading experience and stay updated on the latest political insights.",
 	};
 
 	res.render("signin", context);
@@ -125,9 +125,13 @@ exports.register = asyncHandler(async (req, res, next) => {
 
 	const context = {
 		url: globals.BASE_URL + "pages/register",
-		title: "InGenral | Reader Register",
+		title: globals.APP.site_name + " | Reader Register",
 		description:
-			"Join inGenral and unlock a world of curated political insights. Register for a reader account to personalize your news feed, participate in discussions, and access exclusive content. As a registered reader, you'll stay informed with in-depth articles, expert opinions, and breaking news on political events. Be part of our vibrant community, share your perspectives, and connect with like-minded individuals. Start your inGenral reader journey today by signing up for a free account.",
+			"Join " +
+			globals.APP.site_name +
+			" and unlock a world of curated political insights. Register for a reader account to personalize your news feed, participate in discussions, and access exclusive content. As a registered reader, you'll stay informed with in-depth articles, expert opinions, and breaking news on political events. Be part of our vibrant community, share your perspectives, and connect with like-minded individuals. Start your " +
+			globals.APP.site_name +
+			" reader journey today by signing up for a free account.",
 	};
 
 	res.render("signup", context);

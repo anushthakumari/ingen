@@ -4,4 +4,4 @@ User-agent: *
 Disallow: /creator/
 Disallow: /api/
 
-Sitemap: https://www.ingenral.com/pages/sitemap
+Sitemap: https://blog.aihirestudio.com/pages/sitemap

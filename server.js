@@ -28,7 +28,7 @@ let whitelist;
 
 if (is_prod) {
 	whitelist = [
-		"https://www.ingenral.com",
+		"https://blog.aihirestudio.com",
 		"http://localhost:3001",
 		"https://guru-mantra-faculty-dash.netlify.app",
 	];
@@ -65,7 +65,7 @@ app.use(
 		saveUninitialized: false,
 		resave: false,
 		cookie: {
-			sameSite: is_prod,
+			sameSite: is_prod ? "none" : "lax",
 			secure: is_prod,
 			maxAge: cookieexp,
 		},

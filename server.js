@@ -11,6 +11,7 @@ require("dotenv").config();
 
 const errorHandler = require("./backend/middlewares/errorHandler.middleware");
 const sessionTokenParser = require("./backend/middlewares/tokenParser.middleware");
+const globalVars = require("./backend/middlewares/globalVars.middleware");
 const apiRoutes = require("./backend/routes");
 const staticroutes = require("./backend/routes/staticroutes");
 const { getHome } = require("./backend/controllers/blogs");
@@ -123,6 +124,9 @@ app.use("*", sessionTokenParser, async (req, res, next) => {
 
 	next();
 });
+
+//sets globa configs for ejs templates
+app.use(globalVars)
 
 app.use("/media", express.static("images"));
 app.use("/api", apiRoutes);

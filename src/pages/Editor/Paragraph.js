@@ -161,37 +161,37 @@ const Paragraph = ({
 		setextLinkModal({ isOpen: true, index, selectedText, key });
 	};
 
-	const sumtext = async (index) => {
-		try {
-			const text = fieldsStructure[index]["para"];
-			if (!text?.trim()) {
-				alert("please enter text in paragraph");
-				return;
-			}
+	// const sumtext = async (index) => {
+	// 	try {
+	// 		const text = fieldsStructure[index]["para"];
+	// 		if (!text?.trim()) {
+	// 			alert("please enter text in paragraph");
+	// 			return;
+	// 		}
 
-			setloading(true);
-			const fd = new FormData();
-			fd.append("text", text);
-			const { data } = await axios.post(
-				"https://www.ingenral.com/text-sum",
-				fd
-			);
+	// 		setloading(true);
+	// 		const fd = new FormData();
+	// 		fd.append("text", text);
+	// 		const { data } = await axios.post(
+	// 			"https://www.ingenral.com/text-sum",
+	// 			fd
+	// 		);
 
-			if (data.text) {
-				setfieldsStructure((prev) => {
-					const i = index;
-					let newFormValues = [...prev];
-					newFormValues[i]["para"] = data.text;
-					return newFormValues;
-				});
-			}
-		} catch (error) {
-			console.log(error);
-			alert("Something went wrong!!");
-		} finally {
-			setloading(false);
-		}
-	};
+	// 		if (data.text) {
+	// 			setfieldsStructure((prev) => {
+	// 				const i = index;
+	// 				let newFormValues = [...prev];
+	// 				newFormValues[i]["para"] = data.text;
+	// 				return newFormValues;
+	// 			});
+	// 		}
+	// 	} catch (error) {
+	// 		console.log(error);
+	// 		alert("Something went wrong!!");
+	// 	} finally {
+	// 		setloading(false);
+	// 	}
+	// };
 
 	// const handleCrossClick = (structureIndex) => {
 	// 	setfieldsStructure((curr) => curr.filter((e, i) => i !== structureIndex));
@@ -324,9 +324,9 @@ const Paragraph = ({
 							onClick={() => setextLinkModal({ isOpen: true, index })}>
 							Add External Link
 						</Button> */}
-						<Button variant="outlined" onClick={() => sumtext(index)}>
+						{/* <Button variant="outlined" onClick={() => sumtext(index)}>
 							Summurize above text
-						</Button>
+						</Button> */}
 					</Box>
 				</div>
 			))}

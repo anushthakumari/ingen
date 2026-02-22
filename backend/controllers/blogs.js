@@ -241,8 +241,8 @@ exports.fetchPreviewBlog = asyncHandler(async (req, res, next) => {
 	const context = {
 		base_url: process.env.BASE_URL,
 		blog_url: `${process.env.BASE_URL}pages/articles/${cat_data.slug}/${blog_data.slug}`,
-		site_name: "InGenral",
-		author: "Team InGenral",
+		site_name:globals.APP.site_name,
+		author: "Team "+globals.APP.site_name,
 		author_href: process.env.BASE_URL,
 		slug: blog_data.slug,
 		blog_created_time: blog_data.blog_created_time,

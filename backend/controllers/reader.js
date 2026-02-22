@@ -63,7 +63,7 @@ exports.login = asyncHandler(async (req, res, next) => {
 
 	const context = {
 		url: globals.BASE_URL + "pages/login",
-		title: "InGenral | Reader Login",
+		title: globals.APP.site_name + " | Reader Login",
 		description:
 			"Securely log in to inGenral and access a personalized reading experience. Engage with high-quality political content tailored to your interests. Join our community of informed readers, where you can explore in-depth articles, expert opinions, and breaking news on political events. Your inGenral reader account provides a seamless and curated news journey. Log in now for an enriched reading experience and stay updated on the latest political insights.",
 	};

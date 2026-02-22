@@ -434,10 +434,9 @@ exports.getHome = asyncHandler(async (req, res, next) => {
 
 	const context = {
 		url: globals.BASE_URL,
-		title: "InGenral - Everything You Seek!",
-		description:
-			"Explore diverse perspectives and stay abreast of current events",
-		site_name: "InGenral",
+		title: globals.APP.title,
+		description: globals.APP.desc,
+		site_name: globals.APP.site_name,
 		user_name: req.userData?.name,
 		featured: rows.map(mapBlogData),
 		news: news.rows.map(mapBlogData),
